@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
-import { StatusBar } from "expo-status-bar";
 import { Asset } from "expo-asset";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { NavigationContainer } from "@react-navigation/native";
+import LoggedOutNav from "./navigators/LoggedOutNav";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -50,18 +50,8 @@ export default function App() {
   }
 
   return (
-    <View style={styles.container} onLayout={onLayoutRootView}>
-      <Text>REACT NATIVE LEGGGO!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer onReady={onLayoutRootView}>
+      <LoggedOutNav />
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
