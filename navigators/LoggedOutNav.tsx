@@ -14,9 +14,13 @@ const RootStack = createStackNavigator<RootStackParamList>();
 export default function LoggedOutNav() {
   return (
     <RootStack.Navigator initialRouteName="Welcome">
+      <RootStack.Screen
+        name="Welcome"
+        options={{ headerShown: false }}
+        component={Welcome}
+      />
       <RootStack.Screen name="Login" component={Login} />
       <RootStack.Screen name="CreateAccount" component={CreateAccount} />
-      <RootStack.Screen name="Welcome" component={Welcome} />
     </RootStack.Navigator>
   );
 }

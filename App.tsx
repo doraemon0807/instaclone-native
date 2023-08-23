@@ -5,10 +5,22 @@ import { Asset } from "expo-asset";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { NavigationContainer } from "@react-navigation/native";
 import LoggedOutNav from "./navigators/LoggedOutNav";
+import { Appearance, useColorScheme } from "react-native";
+import { ThemeProvider } from "styled-components/native";
+import { darkTheme, lightTheme } from "./styles";
 
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
+  //grab color scheme and set state
+  const colorScheme = useColorScheme();
+  const [darkMode, setDarkMode] = useState(false);
+
+  useEffect(() => {
+    setDarkMode(colorScheme === "dark" ? true : false);
+  }, [darkMode, setDarkMode]);
+
+  // preload data
   const [appIsReady, setAppIsReady] = useState(false);
 
   useEffect(() => {
@@ -49,9 +61,16 @@ export default function App() {
     return null;
   }
 
+  //Subscribe for theme change
+  Appearance.addChangeListener(({ colorScheme }) =>
+    setDarkMode(colorScheme === "dark" ? true : false)
+  );
+
   return (
-    <NavigationContainer onReady={onLayoutRootView}>
-      <LoggedOutNav />
-    </NavigationContainer>
+    <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
+      <NavigationContainer onReady={onLayoutRootView}>
+        <LoggedOutNav />
+      </NavigationContainer>
+    </ThemeProvider>
   );
 }
