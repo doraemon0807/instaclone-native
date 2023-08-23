@@ -1,14 +1,24 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import React from "react";
-import { Text, View } from "react-native";
 import { RootStackParamList } from "../navigators/LoggedOutNav";
+import { IThemeProps } from "../styles";
+import styled from "styled-components/native";
+import { Image } from "react-native";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Welcome">;
 
+const Container = styled.View`
+  flex: 1;
+  background-color: ${(props: IThemeProps) => props.theme.bgColor};
+`;
+
+const Logo = styled.Image`
+  max-width: 400px;
+`;
+
 export default function Welcome({ navigation }: Props) {
   return (
-    <View>
-      <Text>Hello</Text>
-    </View>
+    <Container>
+      <Logo resizeMode="center" source={require("../assets/logo.png")} />
+    </Container>
   );
 }

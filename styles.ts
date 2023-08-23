@@ -1,4 +1,3 @@
-import { StyleSheet } from "react-native";
 import { DefaultTheme } from "styled-components/native";
 
 export const lightTheme: DefaultTheme = {
@@ -24,3 +23,7 @@ export const darkTheme: DefaultTheme = {
   grayNormal: "#737373",
   grayDark: "#efefef",
 };
+
+export interface IThemeProps {
+  theme: DefaultTheme;
+}
