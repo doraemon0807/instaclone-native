@@ -20,7 +20,15 @@ export default function LoggedOutNav() {
         component={Welcome}
       />
       <RootStack.Screen name="Login" component={Login} />
-      <RootStack.Screen name="CreateAccount" component={CreateAccount} />
+      <RootStack.Screen
+        name="CreateAccount"
+        component={CreateAccount}
+        options={{
+          headerTitle: () => false,
+          headerTransparent: true,
+          headerTintColor: "white",
+        }}
+      />
     </RootStack.Navigator>
   );
 }
