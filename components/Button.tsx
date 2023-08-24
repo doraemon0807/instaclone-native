@@ -6,7 +6,6 @@ const SButton = styled.TouchableOpacity<{ disabled?: boolean }>`
   padding: 10px;
   border-radius: 5px;
   width: 100%;
-  margin: 10px 0px;
   opacity: ${(props: { disabled?: boolean }) => (props.disabled ? "0.5" : "1")};
 `;
 

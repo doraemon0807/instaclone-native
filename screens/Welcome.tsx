@@ -9,13 +9,16 @@ import Button from "../components/Button";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Welcome">;
 
-const Login = styled.TouchableOpacity``;
+const Login = styled.TouchableOpacity`
+  margin-top: 10px;
+`;
 
 const LoginLink = styled.Text`
   color: ${(props: IThemeProps) => props.theme.accentNormal};
   font-weight: 600;
   margin-top: 10px;
   font-size: 16px;
+  text-align: center;
 `;
 
 export default function Welcome({ navigation }: Props) {

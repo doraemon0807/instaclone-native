@@ -8,19 +8,19 @@ export const lightTheme: DefaultTheme = {
   accentDark: "#00376b",
   borderColor: "rgb(229,229,229)",
   grayLight: "#efefef",
-  grayNormal: "#737373",
-  grayDark: "#a2a2a2",
+  grayNormal: "#a2a2a2",
+  grayDark: "#737373",
 };
 
 export const darkTheme: DefaultTheme = {
   fontColor: "#fcfcfc",
-  bgColor: "#2c2c2c",
+  bgColor: "#131313",
   accentLight: "#00376b",
   accentNormal: "#0095f6",
   accentDark: "#4cb5f9",
   borderColor: "rgb(229,229,229)",
-  grayLight: "#a2a2a2",
-  grayNormal: "#737373",
+  grayLight: "#737373",
+  grayNormal: "#a2a2a2",
   grayDark: "#efefef",
 };
 
