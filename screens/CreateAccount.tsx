@@ -20,11 +20,21 @@ export default function CreateAccount() {
   };
 
   useEffect(() => {
-    register("firstName");
-    register("lastName");
-    register("username");
-    register("email");
-    register("password");
+    register("firstName", {
+      required: true,
+    });
+    register("lastName", {
+      required: true,
+    });
+    register("username", {
+      required: true,
+    });
+    register("email", {
+      required: true,
+    });
+    register("password", {
+      required: true,
+    });
   }, [register]);
 
   const lastNameRef: React.MutableRefObject<null> = useRef(null);
@@ -80,7 +90,7 @@ export default function CreateAccount() {
       />
       <Button
         text="Create Account"
-        disabled={true}
+        disabled={false}
         onPress={handleSubmit(onValid)}
       />
     </AuthLayout>

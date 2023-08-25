@@ -1,5 +1,6 @@
 import styled from "styled-components/native";
 import { IThemeProps } from "../styles";
+import { ActivityIndicator } from "react-native";
 
 const SButton = styled.TouchableOpacity<{ disabled?: boolean }>`
   background-color: ${(props: IThemeProps) => props.theme.accentNormal};
@@ -19,12 +20,17 @@ interface IProps {
   text: string;
   disabled?: boolean;
   onPress?: () => void;
+  loading?: boolean;
 }
 
-export default function Button({ disabled, text, onPress }: IProps) {
+export default function Button({ disabled, text, onPress, loading }: IProps) {
   return (
     <SButton disabled={disabled} onPress={onPress}>
-      <SButtonText>{text}</SButtonText>
+      {loading ? (
+        <ActivityIndicator color="white" />
+      ) : (
+        <SButtonText>{text}</SButtonText>
+      )}
     </SButton>
   );
 }

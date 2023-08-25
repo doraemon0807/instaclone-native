@@ -8,6 +8,9 @@ import LoggedOutNav from "./navigators/LoggedOutNav";
 import { Appearance, useColorScheme } from "react-native";
 import { ThemeProvider } from "styled-components/native";
 import { darkTheme, lightTheme } from "./styles";
+import { ApolloProvider, useReactiveVar } from "@apollo/client";
+import client, { isLoggedInVar } from "./apollo";
+import LoggedInNav from "./navigators/LoggedInNav";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -19,6 +22,9 @@ export default function App() {
   useEffect(() => {
     setDarkMode(colorScheme === "dark" ? true : false);
   }, [darkMode, setDarkMode]);
+
+  //check if user is logged in
+  const isLoggedIn = useReactiveVar(isLoggedInVar);
 
   // preload data
   const [appIsReady, setAppIsReady] = useState(false);
@@ -67,10 +73,12 @@ export default function App() {
   );
 
   return (
-    <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
-      <NavigationContainer onReady={onLayoutRootView}>
-        <LoggedOutNav />
-      </NavigationContainer>
-    </ThemeProvider>
+    <ApolloProvider client={client}>
+      <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
+        <NavigationContainer onReady={onLayoutRootView}>
+          {isLoggedIn ? <LoggedInNav /> : <LoggedOutNav />}
+        </NavigationContainer>
+      </ThemeProvider>
+    </ApolloProvider>
   );
 }
