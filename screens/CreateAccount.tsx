@@ -3,8 +3,15 @@ import Button from "../components/Button";
 import AuthInput from "../components/auth/AuthInput";
 import { RefObject, useEffect, useRef } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { graphql } from "../gql";
+import { useMutation } from "@apollo/client";
+import { CreateAccountMutation } from "../gql/graphql";
+import { RootStackParamList } from "../navigators/LoggedOutNav";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-interface IFormValues {
+type Props = NativeStackScreenProps<RootStackParamList, "CreateAccount">;
+
+interface ICreateAccountForm {
   firstName: string;
   lastName: string;
   username: string;
@@ -12,12 +19,31 @@ interface IFormValues {
   password: string;
 }
 
-export default function CreateAccount() {
-  const { register, handleSubmit, setValue } = useForm<IFormValues>();
+const CREATE_ACCOUNT_MUTATION = graphql(`
+  mutation createAccount(
+    $firstName: String!
+    $lastName: String!
+    $username: String!
+    $email: String!
+    $password: String!
+  ) {
+    createAccount(
+      firstName: $firstName
+      lastName: $lastName
+      username: $username
+      email: $email
+      password: $password
+    ) {
+      ok
+      error
+    }
+  }
+`);
 
-  const onValid: SubmitHandler<IFormValues> = (data) => {
-    console.log(data);
-  };
+export default function CreateAccount({ navigation }: Props) {
+  // --- React Hook Form --- //
+  const { register, handleSubmit, setValue, getValues } =
+    useForm<ICreateAccountForm>();
 
   useEffect(() => {
     register("firstName", {
@@ -47,15 +73,45 @@ export default function CreateAccount() {
     nextRef?.current?.focus();
   };
 
+  // --- MUTATION --- //
+  const onCompleted = ({ createAccount: { ok } }: CreateAccountMutation) => {
+    const { username, password } = getValues();
+    if (ok) {
+      navigation.navigate("Login", {
+        username: username,
+        password: password,
+      });
+    }
+  };
+
+  const [createAccountMutation, { loading }] = useMutation(
+    CREATE_ACCOUNT_MUTATION,
+    {
+      onCompleted,
+    }
+  );
+
+  const onSubmitValid: SubmitHandler<ICreateAccountForm> = (data) => {
+    if (!loading) {
+      createAccountMutation({
+        variables: {
+          ...data,
+        },
+      });
+    }
+  };
+
   return (
     <AuthLayout>
       <AuthInput
+        blurOnSubmit={false}
         onSubmitEditing={() => onNext(lastNameRef)}
         returnKeyType="next"
         placeholder="First Name"
         onChangeText={(text: string) => setValue("firstName", text)}
       />
       <AuthInput
+        blurOnSubmit={false}
         onSubmitEditing={() => onNext(usernameRef)}
         innerRef={lastNameRef}
         returnKeyType="next"
@@ -63,6 +119,7 @@ export default function CreateAccount() {
         onChangeText={(text: string) => setValue("lastName", text)}
       />
       <AuthInput
+        blurOnSubmit={false}
         autoCapitalize="none"
         onSubmitEditing={() => onNext(emailRef)}
         innerRef={usernameRef}
@@ -71,6 +128,7 @@ export default function CreateAccount() {
         onChangeText={(text: string) => setValue("username", text)}
       />
       <AuthInput
+        blurOnSubmit={false}
         autoCapitalize="none"
         onSubmitEditing={() => onNext(passwordRef)}
         innerRef={emailRef}
@@ -80,7 +138,7 @@ export default function CreateAccount() {
         onChangeText={(text: string) => setValue("email", text)}
       />
       <AuthInput
-        onSubmitEditing={handleSubmit(onValid)}
+        onSubmitEditing={handleSubmit(onSubmitValid)}
         innerRef={passwordRef}
         returnKeyType="done"
         secureTextEntry
@@ -89,9 +147,10 @@ export default function CreateAccount() {
         lastOne={true}
       />
       <Button
+        loading={loading}
         text="Create Account"
         disabled={false}
-        onPress={handleSubmit(onValid)}
+        onPress={handleSubmit(onSubmitValid)}
       />
     </AuthLayout>
   );

@@ -1,3 +1,4 @@
+import React from "react";
 import styled from "styled-components/native";
 import { IThemeProps } from "../../styles";
 import {
@@ -5,8 +6,9 @@ import {
   KeyboardAvoidingView,
   Platform,
   TouchableWithoutFeedback,
-  useColorScheme,
 } from "react-native";
+import { useReactiveVar } from "@apollo/client";
+import { darkModeVar } from "../../apollo";
 
 const Container = styled.View`
   flex: 1;
@@ -29,7 +31,7 @@ interface IProps {
 }
 
 export default function AuthLayout({ children }: IProps) {
-  const colorScheme = useColorScheme();
+  const darkMode = useReactiveVar(darkModeVar);
 
   const dismissKeyboard = () => {
     Keyboard.dismiss();
@@ -48,7 +50,7 @@ export default function AuthLayout({ children }: IProps) {
           <Logo
             resizeMode="contain"
             source={
-              colorScheme === "dark"
+              darkMode
                 ? require("../../assets/logo_dark.png")
                 : require("../../assets/logo_light.png")
             }

@@ -8,11 +8,11 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { graphql } from "../gql";
 import { useMutation } from "@apollo/client";
 import { LoginMutation } from "../gql/graphql";
-import { isLoggedInVar } from "../apollo";
+import { isLoggedInVar, logUserIn } from "../apollo";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Login">;
 
-interface ILoginForm {
+export interface ILoginForm {
   username: string;
   password: string;
 }
@@ -27,9 +27,14 @@ const LOGIN_MUTATION = graphql(`
   }
 `);
 
-export default function Login({ navigation }: Props) {
-  //React Hook Form
-  const { register, handleSubmit, setValue, watch } = useForm<ILoginForm>();
+export default function Login({ route: { params } }: Props) {
+  // --- React Hook Form --- //
+  const { register, handleSubmit, setValue, watch } = useForm<ILoginForm>({
+    defaultValues: {
+      username: params?.username,
+      password: params?.password,
+    },
+  });
 
   //Register input values via useEffect. Only on React Native
   useEffect(() => {
@@ -44,12 +49,15 @@ export default function Login({ navigation }: Props) {
     nextRef?.current?.focus();
   };
 
-  const onCompleted = ({ login: { ok, error, token } }: LoginMutation) => {
-    if (ok) {
-      isLoggedInVar(true);
+  const onCompleted = async ({
+    login: { ok, error, token },
+  }: LoginMutation) => {
+    if (ok && token) {
+      await logUserIn(token);
     }
   };
 
+  // --- MUTATION --- //
   // mutation function for login
   const [logInMutation, { loading }] = useMutation(LOGIN_MUTATION, {
     onCompleted,
@@ -69,6 +77,8 @@ export default function Login({ navigation }: Props) {
   return (
     <AuthLayout>
       <AuthInput
+        blurOnSubmit={false}
+        value={watch("username")}
         autoCapitalize="none"
         returnKeyType="next"
         placeholder="Username"
@@ -77,6 +87,7 @@ export default function Login({ navigation }: Props) {
         onChangeText={(text: string) => setValue("username", text)}
       />
       <AuthInput
+        value={watch("password")}
         innerRef={passwordRef}
         returnKeyType="done"
         secureTextEntry

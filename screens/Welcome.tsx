@@ -2,8 +2,6 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigators/LoggedOutNav";
 import { IThemeProps } from "../styles";
 import styled from "styled-components/native";
-import { useColorScheme } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import AuthLayout from "../components/auth/AuthLayout";
 import Button from "../components/Button";
 
@@ -31,7 +29,7 @@ export default function Welcome({ navigation }: Props) {
         disabled={false}
         onPress={goToCreateAccount}
         text="Create New Account"
-      ></Button>
+      />
       <Login>
         <LoginLink onPress={goToLogin}>Log in</LoginLink>
       </Login>
