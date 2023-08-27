@@ -26,7 +26,7 @@ export const logUserOut = async () => {
 };
 
 const httpLink = createHttpLink({
-  uri: "https://nice-horses-design.loca.lt/graphql",
+  uri: "https://proud-shrimps-cheat.loca.lt/graphql",
 });
 
 const token = tokenVar();

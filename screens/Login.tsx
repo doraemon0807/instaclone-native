@@ -3,7 +3,7 @@ import { RootStackParamList } from "../navigators/LoggedOutNav";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import AuthLayout from "../components/auth/AuthLayout";
 import AuthInput from "../components/auth/AuthInput";
-import Button from "../components/Button";
+import Button from "../components/shared/Button";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { graphql } from "../gql";
 import { useMutation } from "@apollo/client";

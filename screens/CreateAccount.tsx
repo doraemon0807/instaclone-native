@@ -1,5 +1,5 @@
 import AuthLayout from "../components/auth/AuthLayout";
-import Button from "../components/Button";
+import Button from "../components/shared/Button";
 import AuthInput from "../components/auth/AuthInput";
 import { RefObject, useEffect, useRef } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";

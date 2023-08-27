@@ -3,7 +3,7 @@ import { RootStackParamList } from "../navigators/LoggedOutNav";
 import { IThemeProps } from "../styles";
 import styled from "styled-components/native";
 import AuthLayout from "../components/auth/AuthLayout";
-import Button from "../components/Button";
+import Button from "../components/shared/Button";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Welcome">;
 

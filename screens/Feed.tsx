@@ -1,21 +1,13 @@
 import React from "react";
-import { Text, View } from "react-native";
-import styled from "styled-components/native";
-import { IThemeProps } from "../styles";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { StackParamList } from "../navigators/SharedStackNav";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useQuery } from "@apollo/client";
 import { graphql } from "../gql";
+import { FlatList, Text, View } from "react-native";
+import ScreenLayout from "../components/shared/ScreenLayout";
+import PhotoItem from "../components/shared/PhotoItem";
 
 type Props = NativeStackScreenProps<StackParamList, "Feed">;
-
-const Container = styled.View`
-  background-color: ${(props: IThemeProps) => props.theme.bgColor};
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-`;
 
 const FEED_QUERY = graphql(`
   query seeFeed {
@@ -37,13 +29,21 @@ const FEED_QUERY = graphql(`
 
 export default function Feed({ navigation }: Props) {
   // --- QUERY --- //
-  const { data } = useQuery(FEED_QUERY);
+  const { data, loading } = useQuery(FEED_QUERY);
 
-  console.log(data);
+  const renderPhoto = ({ item }: any) => {
+    return <PhotoItem navigation={navigation} {...item} />;
+  };
 
   return (
-    <Container>
-      <Text style={{ color: "white" }}>Photo</Text>
-    </Container>
+    <ScreenLayout loading={loading}>
+      <FlatList
+        style={{ flex: 1, width: "100%" }}
+        showsVerticalScrollIndicator={false}
+        data={data?.seeFeed.photos}
+        keyExtractor={(photo) => photo?.id + ""}
+        renderItem={renderPhoto}
+      />
+    </ScreenLayout>
   );
 }

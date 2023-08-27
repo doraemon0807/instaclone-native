@@ -1,8 +1,6 @@
 import { Text, View } from "react-native";
 import styled from "styled-components/native";
 import { IThemeProps } from "../styles";
-import { logUserOut } from "../apollo";
-import Button from "../components/shared/Button";
 
 const Container = styled.View`
   background-color: ${(props: IThemeProps) => props.theme.bgColor};
@@ -11,11 +9,10 @@ const Container = styled.View`
   justify-content: center;
 `;
 
-export default function Me() {
+export default function Comments() {
   return (
     <Container>
-      <Text style={{ color: "white" }}>Hello This is Me!</Text>
-      <Button disabled={false} onPress={logUserOut} text="Logout" />
+      <Text style={{ color: "white" }}>Hello This is Comments!</Text>
     </Container>
   );
 }

@@ -1,5 +1,5 @@
 import styled from "styled-components/native";
-import { IThemeProps } from "../styles";
+import { IThemeProps } from "../../styles";
 import { ActivityIndicator } from "react-native";
 
 const SButton = styled.TouchableOpacity<{ disabled?: boolean }>`
