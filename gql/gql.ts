@@ -17,7 +17,8 @@ const documents = {
     "\n  fragment CommentFragment on Comment {\n    id\n    payload\n    isMine\n    createdAt\n    user {\n      id\n      username\n      avatar\n    }\n  }\n": types.CommentFragmentFragmentDoc,
     "\n  fragment UserFragment on User {\n    id\n    username\n    avatar\n  }\n": types.UserFragmentFragmentDoc,
     "\n  mutation createAccount(\n    $firstName: String!\n    $lastName: String!\n    $username: String!\n    $email: String!\n    $password: String!\n  ) {\n    createAccount(\n      firstName: $firstName\n      lastName: $lastName\n      username: $username\n      email: $email\n      password: $password\n    ) {\n      ok\n      error\n    }\n  }\n": types.CreateAccountDocument,
-    "\n  query seeFeed {\n    seeFeed {\n      ok\n      error\n      photos {\n        ...PhotoFragment\n        user {\n          ...UserFragment\n        }\n        comments {\n          ...CommentFragment\n        }\n      }\n    }\n  }\n": types.SeeFeedDocument,
+    "\n  query seeFeed($offset: Int) {\n    seeFeed(offset: $offset) {\n      ...PhotoFragment\n      user {\n        ...UserFragment\n      }\n      comments {\n        ...CommentFragment\n      }\n    }\n  }\n": types.SeeFeedDocument,
+    "\n  mutation toggleLike($id: Int!) {\n    toggleLike(id: $id) {\n      ok\n      error\n    }\n  }\n": types.ToggleLikeDocument,
     "\n  mutation login($username: String!, $password: String!) {\n    login(username: $username, password: $password) {\n      ok\n      token\n      error\n    }\n  }\n": types.LoginDocument,
 };
 
@@ -54,7 +55,11 @@ export function graphql(source: "\n  mutation createAccount(\n    $firstName: St
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query seeFeed {\n    seeFeed {\n      ok\n      error\n      photos {\n        ...PhotoFragment\n        user {\n          ...UserFragment\n        }\n        comments {\n          ...CommentFragment\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  query seeFeed {\n    seeFeed {\n      ok\n      error\n      photos {\n        ...PhotoFragment\n        user {\n          ...UserFragment\n        }\n        comments {\n          ...CommentFragment\n        }\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  query seeFeed($offset: Int) {\n    seeFeed(offset: $offset) {\n      ...PhotoFragment\n      user {\n        ...UserFragment\n      }\n      comments {\n        ...CommentFragment\n      }\n    }\n  }\n"): (typeof documents)["\n  query seeFeed($offset: Int) {\n    seeFeed(offset: $offset) {\n      ...PhotoFragment\n      user {\n        ...UserFragment\n      }\n      comments {\n        ...CommentFragment\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation toggleLike($id: Int!) {\n    toggleLike(id: $id) {\n      ok\n      error\n    }\n  }\n"): (typeof documents)["\n  mutation toggleLike($id: Int!) {\n    toggleLike(id: $id) {\n      ok\n      error\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

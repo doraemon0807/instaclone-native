@@ -10,8 +10,10 @@ import { IThemeProps, darkTheme, lightTheme } from "../../styles";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StackParamList } from "../../navigators/SharedStackNav";
 import { Ionicons } from "@expo/vector-icons";
-import { useReactiveVar } from "@apollo/client";
+import { ApolloCache, useMutation, useReactiveVar } from "@apollo/client";
 import { darkModeVar } from "../../apollo";
+import { graphql } from "../../gql";
+import { Photo, ToggleLikeMutation } from "../../gql/graphql";
 
 const Container = styled.View``;
 const Header = styled.TouchableOpacity`
@@ -91,6 +93,19 @@ interface IPhotoProps {
   navigation: NativeStackNavigationProp<StackParamList, "Feed", undefined>;
 }
 
+interface IUpdateToggleLikeProps {
+  data?: ToggleLikeMutation | null;
+}
+
+const TOGGLE_LIKE_MUTATION = graphql(`
+  mutation toggleLike($id: Int!) {
+    toggleLike(id: $id) {
+      ok
+      error
+    }
+  }
+`);
+
 export default function PhotoItem({
   id,
   user,
@@ -117,6 +132,61 @@ export default function PhotoItem({
     });
   }, [file]);
 
+  // --- Toggle like MUTATION --- //
+  // Function to update cache data
+  const updateToggleLike = (
+    cache: ApolloCache<Photo>,
+    result: IUpdateToggleLikeProps
+  ) => {
+    if (!result.data) {
+      return;
+    }
+    const {
+      data: {
+        toggleLike: { ok },
+      },
+    } = result;
+
+    if (ok) {
+      // modify cache fragment
+      const fragmentId = `Photo:${id}`;
+      cache.modify({
+        id: fragmentId,
+        fields: {
+          isLiked(prev) {
+            return !prev;
+          },
+          likes(prev) {
+            if (isLiked) {
+              return prev - 1;
+            }
+            return prev + 1;
+          },
+        },
+      });
+    }
+  };
+
+  //mutation function to toggle likes
+  const [toggleLikeMutation, { loading: toggleLikeLoading }] = useMutation(
+    TOGGLE_LIKE_MUTATION,
+    {
+      update: updateToggleLike,
+    }
+  );
+
+  //function to call when like button is clicked
+  const onLikeClick = () => {
+    if (toggleLikeLoading) {
+      return;
+    }
+    toggleLikeMutation({
+      variables: {
+        id,
+      },
+    });
+  };
+
   return (
     <Container>
       <Header onPress={() => navigation.navigate("Profile")}>
@@ -130,7 +200,7 @@ export default function PhotoItem({
       />
       <ExtraContainer>
         <Actions>
-          <Action>
+          <Action onPress={onLikeClick}>
             <Ionicons
               name={isLiked ? "heart" : "heart-outline"}
               color={

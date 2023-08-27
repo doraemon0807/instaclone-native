@@ -13,8 +13,16 @@ import { ApolloProvider, useReactiveVar } from "@apollo/client";
 import client, { darkModeVar, isLoggedInVar, tokenVar } from "./apollo";
 import LoggedInNav from "./navigators/LoggedInNav";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { loadDevMessages, loadErrorMessages } from "@apollo/client/dev";
+import { persistCache, AsyncStorageWrapper } from "apollo3-cache-persist";
+import { cache } from "./apollo";
 
 SplashScreen.preventAutoHideAsync();
+
+if (__DEV__) {
+  loadDevMessages();
+  loadErrorMessages();
+}
 
 export default function App() {
   //grab color scheme and set state
@@ -47,6 +55,12 @@ export default function App() {
           isLoggedInVar(true);
           tokenVar(token);
         }
+
+        // Store cache data
+        await persistCache({
+          cache,
+          storage: new AsyncStorageWrapper(AsyncStorage),
+        });
 
         // Pre-Load images
         const imagesToLoad = [require("./assets/logo.png")];
