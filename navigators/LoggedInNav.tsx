@@ -5,7 +5,6 @@ import { darkModeVar } from "../apollo";
 import { darkTheme, lightTheme } from "../styles";
 import { View } from "react-native";
 import TabIcon from "../components/nav/TabIcon";
-import Me from "../screens/Me";
 import StackNavFactory from "./SharedStackNav";
 
 export type TabsParamList = {

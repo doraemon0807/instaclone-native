@@ -1,18 +1,74 @@
-import { Text, View } from "react-native";
-import styled from "styled-components/native";
-import { IThemeProps } from "../styles";
+import React, { useState } from "react";
+import { FlatList, View } from "react-native";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { StackParamList } from "../navigators/SharedStackNav";
+import { graphql } from "../gql";
+import { useQuery } from "@apollo/client";
+import ScreenLayout from "../components/shared/ScreenLayout";
+import UserRow from "../components/user/UserRow";
 
-const Container = styled.View`
-  background-color: ${(props: IThemeProps) => props.theme.bgColor};
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-`;
+type Props = NativeStackScreenProps<StackParamList, "Likes">;
 
-export default function Likes() {
+const LIKE_QUERY = graphql(`
+  query seePhotoLikes($photoId: Int!) {
+    seePhotoLikes(id: $photoId) {
+      ...UserFragment
+    }
+  }
+`);
+
+export default function Likes({ route: { params }, navigation }: Props) {
+  // --- QUERY --- //
+  const { data, loading, refetch, fetchMore } = useQuery(LIKE_QUERY, {
+    skip: !params?.photoId,
+    variables: {
+      photoId: params?.photoId!,
+    },
+  });
+
+  //render item once data is loaded
+  const renderUser = ({ item: user }: any) => (
+    <UserRow {...user} navigation={navigation} />
+  );
+
+  //refresh when pulled down
+  const [refreshing, setRefreshing] = useState(false);
+
+  const refresh = async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  };
+
   return (
-    <Container>
-      <Text style={{ color: "white" }}>Hello This is LIKE!</Text>
-    </Container>
+    <ScreenLayout loading={loading}>
+      <FlatList
+        ItemSeparatorComponent={() => (
+          <View
+            style={{
+              width: "100%",
+              height: 1,
+              backgroundColor: "rgba(255,255,255,0.1)",
+            }}
+          ></View>
+        )}
+        // infinite scroll implementation
+        onEndReachedThreshold={0.3}
+        onEndReached={() =>
+          fetchMore({
+            variables: {
+              offset: data?.seePhotoLikes.length,
+            },
+          })
+        }
+        refreshing={refreshing}
+        onRefresh={refresh}
+        style={{ flex: 1, width: "100%" }}
+        showsVerticalScrollIndicator={false}
+        data={data?.seePhotoLikes}
+        keyExtractor={(item) => item?.id + ""}
+        renderItem={renderUser}
+      />
+    </ScreenLayout>
   );
 }

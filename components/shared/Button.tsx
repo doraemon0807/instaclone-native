@@ -2,7 +2,7 @@ import styled from "styled-components/native";
 import { IThemeProps } from "../../styles";
 import { ActivityIndicator } from "react-native";
 
-const SButton = styled.TouchableOpacity<{ disabled?: boolean }>`
+export const SButton = styled.TouchableOpacity<{ disabled?: boolean }>`
   background-color: ${(props: IThemeProps) => props.theme.accentNormal};
   padding: 10px;
   border-radius: 5px;
@@ -10,7 +10,7 @@ const SButton = styled.TouchableOpacity<{ disabled?: boolean }>`
   opacity: ${(props: { disabled?: boolean }) => (props.disabled ? "0.5" : "1")};
 `;
 
-const SButtonText = styled.Text`
+export const SButtonText = styled.Text`
   color: white;
   font-size: 16px;
   text-align: center;

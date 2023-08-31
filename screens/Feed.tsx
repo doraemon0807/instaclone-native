@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { StackParamList } from "../navigators/SharedStackNav";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useMutation, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { graphql } from "../gql";
-import { FlatList, Text, View } from "react-native";
+import { FlatList } from "react-native";
 import ScreenLayout from "../components/shared/ScreenLayout";
 import PhotoItem from "../components/shared/PhotoItem";
 

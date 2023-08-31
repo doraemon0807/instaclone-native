@@ -14,7 +14,11 @@ import client, { darkModeVar, isLoggedInVar, tokenVar } from "./apollo";
 import LoggedInNav from "./navigators/LoggedInNav";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { loadDevMessages, loadErrorMessages } from "@apollo/client/dev";
-import { persistCache, AsyncStorageWrapper } from "apollo3-cache-persist";
+import {
+  persistCache,
+  AsyncStorageWrapper,
+  CachePersistor,
+} from "apollo3-cache-persist";
 import { cache } from "./apollo";
 
 SplashScreen.preventAutoHideAsync();
@@ -57,10 +61,18 @@ export default function App() {
         }
 
         // Store cache data
-        await persistCache({
+        const persistor = new CachePersistor({
           cache,
           storage: new AsyncStorageWrapper(AsyncStorage),
         });
+
+        await persistor.purge();
+        await persistor.restore();
+        // await persistCache({
+        //   cache,
+        //   storage: new AsyncStorageWrapper(AsyncStorage),
+        //   serialize: false
+        // });
 
         // Pre-Load images
         const imagesToLoad = [require("./assets/logo.png")];

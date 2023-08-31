@@ -32,5 +32,7 @@ export const USER_FRAGMENT = graphql(`
     id
     username
     avatar
+    isFollowing
+    isMe
   }
 `);

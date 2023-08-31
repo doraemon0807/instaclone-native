@@ -8,7 +8,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { graphql } from "../gql";
 import { useMutation } from "@apollo/client";
 import { LoginMutation } from "../gql/graphql";
-import { isLoggedInVar, logUserIn } from "../apollo";
+import { logUserIn } from "../apollo";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Login">;
 

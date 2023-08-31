@@ -78,6 +78,8 @@ interface IPhotoProps {
     id: number;
     username: string;
     avatar?: string | null;
+    isFollowing: boolean;
+    isMe: boolean;
   };
   comments?: Array<{
     id: number;
@@ -113,8 +115,6 @@ export default function PhotoItem({
   isLiked,
   likes,
   caption,
-  comments,
-  commentCount,
   navigation,
 }: IPhotoProps) {
   const darkMode = useReactiveVar(darkModeVar);
@@ -187,9 +187,17 @@ export default function PhotoItem({
     });
   };
 
+  //function to go to profile
+  const goToProfile = () => {
+    navigation.navigate("Profile", {
+      username: user.username,
+      id,
+    });
+  };
+
   return (
     <Container>
-      <Header onPress={() => navigation.navigate("Profile")}>
+      <Header onPress={goToProfile}>
         <UserAvatar resizeMode="cover" source={{ uri: user.avatar }} />
         <Username>{user.username}</Username>
       </Header>
@@ -221,11 +229,13 @@ export default function PhotoItem({
             />
           </Action>
         </Actions>
-        <TouchableOpacity onPress={() => navigation.navigate("Likes")}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Likes", { photoId: id })}
+        >
           <Likes>{likes === 1 ? "1 like" : `${likes} likes`}</Likes>
         </TouchableOpacity>
         <Caption>
-          <CaptionUsername onPress={() => navigation.navigate("Profile")}>
+          <CaptionUsername onPress={goToProfile}>
             <Username>{user.username}</Username>
           </CaptionUsername>
           <CaptionText>{caption}</CaptionText>

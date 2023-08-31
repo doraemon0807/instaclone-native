@@ -7,7 +7,8 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "codegen": "graphql-codegen --config codegen.ts"
+    "codegen": "graphql-codegen --config codegen.ts",
+    "localtunnel": "npx localtunnel --port 4000"
   },
   "dependencies": {
     "@apollo/client": "^3.8.1",

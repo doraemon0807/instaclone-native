@@ -9,7 +9,7 @@ import { setContext } from "@apollo/client/link/context";
 import { offsetLimitPagination } from "@apollo/client/utilities";
 
 export const isLoggedInVar = makeVar(false);
-export const tokenVar = makeVar("");
+export const tokenVar = makeVar<string | null>("");
 export const darkModeVar = makeVar(false);
 
 const TOKEN = "token";
@@ -23,18 +23,17 @@ export const logUserIn = async (token: string) => {
 export const logUserOut = async () => {
   await AsyncStorage.removeItem(TOKEN);
   isLoggedInVar(false);
-  tokenVar("");
+  tokenVar(null);
 };
 
 const httpLink = createHttpLink({
-  uri: "https://rotten-pugs-sell.loca.lt/graphql",
+  uri: "https://ready-pots-drum.loca.lt/graphql",
 });
 
 const authLink = setContext((_, { headers }) => {
   return {
     headers: {
       ...headers,
-      //   authorization: token ? `Bearer ${token}` : "",
       token: tokenVar(),
     },
   };

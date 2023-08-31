@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components/native";
 import { IThemeProps } from "../../styles";
 import {
+  ImageProps,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -18,7 +19,7 @@ const Container = styled.View`
   padding: 0px 20px;
 `;
 
-const Logo = styled.Image`
+const Logo: React.FC<ImageProps> = styled.Image`
   max-width: 70%;
   width: 100%;
   height: 100px;

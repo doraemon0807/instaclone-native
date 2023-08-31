@@ -21,14 +21,23 @@ export type StackParamList = {
   Search: undefined;
   Notifications: undefined;
   Me: undefined;
-  Profile: undefined;
+  Profile: IProfileProps | undefined;
   Photo: undefined;
-  Likes: undefined;
+  Likes: IPhotoProps | undefined;
   Comments: undefined;
 };
 
 interface ISharedStackNavProps {
   screenName: string;
+}
+
+interface IProfileProps {
+  username: string;
+  id: number;
+}
+
+interface IPhotoProps {
+  photoId: number;
 }
 
 const Logo = styled.Image`
