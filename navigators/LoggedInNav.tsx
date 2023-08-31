@@ -7,6 +7,7 @@ import { View } from "react-native";
 import TabIcon from "../components/nav/TabIcon";
 import StackNavFactory from "./SharedStackNav";
 import useUser from "../hook/useUser";
+import Avatar from "../components/shared/Avatar";
 
 export type TabsParamList = {
   TabFeed: undefined;
@@ -43,7 +44,7 @@ export default function LoggedInNav() {
       <Tabs.Screen
         name="TabFeed"
         options={{
-          tabBarIcon: ({ focused, color, size }) => (
+          tabBarIcon: ({ focused, color }) => (
             <TabIcon iconName="home" focused={focused} color={color} />
           ),
         }}
@@ -53,7 +54,7 @@ export default function LoggedInNav() {
       <Tabs.Screen
         name="TabSearch"
         options={{
-          tabBarIcon: ({ focused, color, size }) => (
+          tabBarIcon: ({ focused, color }) => (
             <TabIcon iconName="search" focused={focused} color={color} />
           ),
         }}
@@ -64,7 +65,7 @@ export default function LoggedInNav() {
         name="Camera"
         component={View}
         options={{
-          tabBarIcon: ({ focused, color, size }) => (
+          tabBarIcon: ({ focused, color }) => (
             <TabIcon iconName="camera" focused={focused} color={color} />
           ),
         }}
@@ -72,7 +73,7 @@ export default function LoggedInNav() {
       <Tabs.Screen
         name="TabNotifications"
         options={{
-          tabBarIcon: ({ focused, color, size }) => (
+          tabBarIcon: ({ focused, color }) => (
             <TabIcon iconName="heart" focused={focused} color={color} />
           ),
         }}
@@ -84,7 +85,11 @@ export default function LoggedInNav() {
         options={{
           tabBarIcon: ({ focused, color }) =>
             data?.me.profile?.avatar ? (
-              <TabIcon iconName="person" focused={focused} color={color} />
+              <Avatar
+                avatarUrl={data.me.profile.avatar}
+                size="small"
+                focused={focused}
+              />
             ) : (
               <TabIcon iconName="person" focused={focused} color={color} />
             ),

@@ -7,6 +7,8 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { StackParamList } from "../navigators/SharedStackNav";
 import DismissKeyboard from "../components/shared/DismissKeyboard";
 import { useForm } from "react-hook-form";
+import { graphql } from "../gql";
+import { useLazyQuery } from "@apollo/client";
 
 type Props = NativeStackScreenProps<StackParamList, "Search">;
 
@@ -21,8 +23,22 @@ const Input: React.FC<TextInputProps> = styled.TextInput`
   background-color: white;
 `;
 
+const SEARCH_PHOTOS = graphql(`
+  query searchPhotos($keyword: String!) {
+    searchPhotos(keyword: $keyword) {
+      photos {
+        id
+        file
+      }
+    }
+  }
+`);
+
 export default function Search({ navigation }: Props) {
   const { setValue, register } = useForm();
+
+  // --- Lazy query: only run query when requested --- //
+  const [startQueryFn, { loading, data }] = useLazyQuery(SEARCH_PHOTOS);
 
   const SearchBox = () => (
     <Input

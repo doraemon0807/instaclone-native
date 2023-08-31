@@ -5,17 +5,17 @@ import { useReactiveVar } from "@apollo/client";
 import { darkModeVar } from "../../apollo";
 import { Ionicons } from "@expo/vector-icons";
 
-const SmallAvatar: React.FC<ImageProps> = styled.Image`
+const SmallAvatar = styled.Image`
   width: 30px;
   height: 30px;
   border-radius: 15px;
 `;
-const MediumAvatar: React.FC<ImageProps> = styled.Image`
+const MediumAvatar = styled.Image`
   width: 50px;
   height: 50px;
   border-radius: 25px;
 `;
-const LargeAvatar: React.FC<ImageProps> = styled.Image`
+const LargeAvatar = styled.Image`
   width: 80px;
   height: 80px;
   border-radius: 40px;
@@ -46,15 +46,49 @@ const LargeNoAvatar = styled(NoAvatar)`
 interface IAvatarProps {
   avatarUrl?: string | null;
   size?: "small" | "large";
+  focused?: boolean;
+  [key: string]: any;
 }
 
-const avatarSized = (avatarUrl: string, size?: "small" | "large") => {
+const avatarSized = (
+  avatarUrl: string,
+  size?: "small" | "large",
+  focused?: boolean,
+  darkMode?: boolean
+) => {
   return size === "small" ? (
-    <SmallAvatar resizeMode="cover" source={{ uri: avatarUrl }} />
+    <SmallAvatar
+      resizeMode="cover"
+      source={{ uri: avatarUrl }}
+      style={{
+        ...(focused && {
+          borderWidth: 1,
+          borderColor: darkMode ? darkTheme.fontColor : lightTheme.fontColor,
+        }),
+      }}
+    />
   ) : size === "large" ? (
-    <LargeAvatar resizeMode="cover" source={{ uri: avatarUrl }} />
+    <LargeAvatar
+      resizeMode="cover"
+      source={{ uri: avatarUrl }}
+      style={{
+        ...(focused && {
+          borderWidth: 1,
+          borderColor: darkMode ? darkTheme.fontColor : lightTheme.fontColor,
+        }),
+      }}
+    />
   ) : (
-    <MediumAvatar resizeMode="cover" source={{ uri: avatarUrl }} />
+    <MediumAvatar
+      resizeMode="cover"
+      source={{ uri: avatarUrl }}
+      style={{
+        ...(focused && {
+          borderWidth: 1,
+          borderColor: darkMode ? darkTheme.fontColor : lightTheme.fontColor,
+        }),
+      }}
+    />
   );
 };
 
@@ -89,10 +123,10 @@ const noAvatarSized = (
   );
 };
 
-export default function Avatar({ avatarUrl, size }: IAvatarProps) {
+export default function Avatar({ avatarUrl, size, focused }: IAvatarProps) {
   const darkMode = useReactiveVar(darkModeVar);
 
   return avatarUrl
-    ? avatarSized(avatarUrl, size)
+    ? avatarSized(avatarUrl, size, focused, darkMode)
     : noAvatarSized(size, darkMode);
 }
