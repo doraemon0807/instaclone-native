@@ -5,7 +5,7 @@ interface ITabIconProps {
   iconName: "home" | "search" | "camera" | "heart" | "person";
   focused: boolean;
   color: string;
-  size: number;
+  size?: number;
 }
 
 export default function TabIcon({
@@ -18,7 +18,7 @@ export default function TabIcon({
     <Ionicons
       name={focused ? iconName : `${iconName}-outline`}
       color={color}
-      size={focused ? 28 : 22}
+      size={size ? size : focused ? 28 : 22}
     />
   );
 }

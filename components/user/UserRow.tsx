@@ -4,6 +4,7 @@ import styled from "styled-components/native";
 import { SButtonText } from "../shared/Button";
 import { StackParamList } from "../../navigators/SharedStackNav";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import Avatar from "../shared/Avatar";
 
 const Wrapper = styled.View`
   flex-direction: row;
@@ -15,15 +16,11 @@ const Column: React.FC<TouchableOpacityProps> = styled.TouchableOpacity`
   flex-direction: row;
   align-items: center;
 `;
-const Avatar = styled.Image`
-  width: 50px;
-  height: 50px;
-  border-radius: 25px;
-  margin-right: 10px;
-`;
+
 const Username = styled.Text`
   font-weight: 600;
   color: white;
+  margin-left: 10px;
 `;
 
 const FollowBtn = styled.TouchableOpacity<{ isFollowing: boolean }>`
@@ -67,7 +64,7 @@ export default function UserRow({
           })
         }
       >
-        <Avatar source={{ uri: avatar }} />
+        <Avatar avatarUrl={avatar} />
         <Username>{username}</Username>
       </Column>
       {!isMe ? (

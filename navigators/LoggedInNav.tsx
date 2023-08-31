@@ -6,6 +6,7 @@ import { darkTheme, lightTheme } from "../styles";
 import { View } from "react-native";
 import TabIcon from "../components/nav/TabIcon";
 import StackNavFactory from "./SharedStackNav";
+import useUser from "../hook/useUser";
 
 export type TabsParamList = {
   TabFeed: undefined;
@@ -19,6 +20,8 @@ const Tabs = createBottomTabNavigator<TabsParamList>();
 
 export default function LoggedInNav() {
   const darkMode = useReactiveVar(darkModeVar);
+
+  const { data } = useUser();
 
   return (
     <Tabs.Navigator
@@ -41,12 +44,7 @@ export default function LoggedInNav() {
         name="TabFeed"
         options={{
           tabBarIcon: ({ focused, color, size }) => (
-            <TabIcon
-              iconName="home"
-              focused={focused}
-              color={color}
-              size={size}
-            />
+            <TabIcon iconName="home" focused={focused} color={color} />
           ),
         }}
       >
@@ -56,12 +54,7 @@ export default function LoggedInNav() {
         name="TabSearch"
         options={{
           tabBarIcon: ({ focused, color, size }) => (
-            <TabIcon
-              iconName="search"
-              focused={focused}
-              color={color}
-              size={size}
-            />
+            <TabIcon iconName="search" focused={focused} color={color} />
           ),
         }}
       >
@@ -72,12 +65,7 @@ export default function LoggedInNav() {
         component={View}
         options={{
           tabBarIcon: ({ focused, color, size }) => (
-            <TabIcon
-              iconName="camera"
-              focused={focused}
-              color={color}
-              size={size}
-            />
+            <TabIcon iconName="camera" focused={focused} color={color} />
           ),
         }}
       />
@@ -85,12 +73,7 @@ export default function LoggedInNav() {
         name="TabNotifications"
         options={{
           tabBarIcon: ({ focused, color, size }) => (
-            <TabIcon
-              iconName="heart"
-              focused={focused}
-              color={color}
-              size={size}
-            />
+            <TabIcon iconName="heart" focused={focused} color={color} />
           ),
         }}
       >
@@ -99,14 +82,12 @@ export default function LoggedInNav() {
       <Tabs.Screen
         name="TabMe"
         options={{
-          tabBarIcon: ({ focused, color, size }) => (
-            <TabIcon
-              iconName="person"
-              focused={focused}
-              color={color}
-              size={size}
-            />
-          ),
+          tabBarIcon: ({ focused, color }) =>
+            data?.me.profile?.avatar ? (
+              <TabIcon iconName="person" focused={focused} color={color} />
+            ) : (
+              <TabIcon iconName="person" focused={focused} color={color} />
+            ),
         }}
       >
         {() => <StackNavFactory screenName="Me" />}

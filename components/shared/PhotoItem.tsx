@@ -14,6 +14,7 @@ import { ApolloCache, useMutation, useReactiveVar } from "@apollo/client";
 import { darkModeVar } from "../../apollo";
 import { graphql } from "../../gql";
 import { Photo, ToggleLikeMutation } from "../../gql/graphql";
+import Avatar from "./Avatar";
 
 const Container = styled.View``;
 const Header = styled.TouchableOpacity`
@@ -22,15 +23,10 @@ const Header = styled.TouchableOpacity`
   align-items: center;
 `;
 
-const UserAvatar = styled.Image`
-  width: 30px;
-  height: 30px;
-  border-radius: 25px;
-  margin-right: 10px;
-`;
 const Username = styled.Text`
   color: ${(props: IThemeProps) => props.theme.fontColor};
   font-weight: 600;
+  margin-left: 10px;
 `;
 
 const File = styled.Image``;
@@ -57,7 +53,10 @@ const Caption = styled.View`
   flex-direction: row;
 `;
 
-const CaptionUsername = styled.TouchableOpacity``;
+const CaptionUsername = styled.Text`
+  color: ${(props: IThemeProps) => props.theme.fontColor};
+  font-weight: 600;
+`;
 
 const CaptionText = styled.Text`
   color: ${(props: IThemeProps) => props.theme.fontColor};
@@ -198,7 +197,7 @@ export default function PhotoItem({
   return (
     <Container>
       <Header onPress={goToProfile}>
-        <UserAvatar resizeMode="cover" source={{ uri: user.avatar }} />
+        <Avatar avatarUrl={user.avatar} size="small" />
         <Username>{user.username}</Username>
       </Header>
       <File
@@ -235,9 +234,9 @@ export default function PhotoItem({
           <Likes>{likes === 1 ? "1 like" : `${likes} likes`}</Likes>
         </TouchableOpacity>
         <Caption>
-          <CaptionUsername onPress={goToProfile}>
-            <Username>{user.username}</Username>
-          </CaptionUsername>
+          <TouchableOpacity onPress={goToProfile}>
+            <CaptionUsername>{user.username}</CaptionUsername>
+          </TouchableOpacity>
           <CaptionText>{caption}</CaptionText>
         </Caption>
       </ExtraContainer>

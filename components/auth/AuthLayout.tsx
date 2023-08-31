@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { useReactiveVar } from "@apollo/client";
 import { darkModeVar } from "../../apollo";
+import DismissKeyboard from "../shared/DismissKeyboard";
 
 const Container = styled.View`
   flex: 1;
@@ -34,12 +35,8 @@ interface IProps {
 export default function AuthLayout({ children }: IProps) {
   const darkMode = useReactiveVar(darkModeVar);
 
-  const dismissKeyboard = () => {
-    Keyboard.dismiss();
-  };
-
   return (
-    <TouchableWithoutFeedback style={{ flex: 1 }} onPress={dismissKeyboard}>
+    <DismissKeyboard>
       <Container>
         <KeyboardAvoidingView
           style={{
@@ -59,6 +56,6 @@ export default function AuthLayout({ children }: IProps) {
           {children}
         </KeyboardAvoidingView>
       </Container>
-    </TouchableWithoutFeedback>
+    </DismissKeyboard>
   );
 }
