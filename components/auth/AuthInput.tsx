@@ -2,9 +2,9 @@ import styled from "styled-components/native";
 import { RefObject } from "react";
 import { IThemeProps } from "../../styles";
 
-const STextInput = styled.TextInput.attrs({
-  placeholderTextColor: "rgba(255,255,255,0.6)",
-})<{ lastOne?: boolean }>`
+const STextInput = styled.TextInput.attrs((props: IThemeProps) => ({
+  placeholderTextColor: props.theme.grayNormal,
+}))<{ lastOne?: boolean }>`
   background-color: ${(props: IThemeProps) => props.theme.grayLight};
   padding: 10px 8px;
   border-radius: 4px;

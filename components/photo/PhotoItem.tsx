@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Image,
-  Text,
-  TouchableOpacity,
-  useWindowDimensions,
-} from "react-native";
+import { Image, TouchableOpacity, useWindowDimensions } from "react-native";
 import styled from "styled-components/native";
 import { IThemeProps, darkTheme, lightTheme } from "../../styles";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -14,7 +9,7 @@ import { ApolloCache, useMutation, useReactiveVar } from "@apollo/client";
 import { darkModeVar } from "../../apollo";
 import { graphql } from "../../gql";
 import { Photo, ToggleLikeMutation } from "../../gql/graphql";
-import Avatar from "./Avatar";
+import Avatar from "../shared/Avatar";
 
 const Container = styled.View``;
 const Header = styled.TouchableOpacity`
@@ -64,7 +59,7 @@ const CaptionText = styled.Text`
   flex-shrink: 1;
 `;
 
-interface IPhotoProps {
+interface IPhotoItemProps {
   id: number;
   file: string;
   caption?: string | null;
@@ -91,7 +86,11 @@ interface IPhotoProps {
       avatar?: string | null;
     };
   } | null> | null;
-  navigation: NativeStackNavigationProp<StackParamList, "Feed", undefined>;
+  navigation: NativeStackNavigationProp<
+    StackParamList,
+    "Feed" | "Photo",
+    undefined
+  >;
 }
 
 interface IUpdateToggleLikeProps {
@@ -115,7 +114,7 @@ export default function PhotoItem({
   likes,
   caption,
   navigation,
-}: IPhotoProps) {
+}: IPhotoItemProps) {
   const darkMode = useReactiveVar(darkModeVar);
 
   //Find width and height of the screen

@@ -2,7 +2,7 @@ import type { CodegenConfig } from "@graphql-codegen/cli";
 
 const config: CodegenConfig = {
   overwrite: true,
-  schema: "https://ready-pots-drum.loca.lt/graphql",
+  schema: "https://pink-steaks-tease.loca.lt/graphql",
   documents: ["./**/*.{tsx,ts}"],
   ignoreNoDocuments: true,
   generates: {

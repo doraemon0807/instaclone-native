@@ -5,7 +5,7 @@ import { useQuery } from "@apollo/client";
 import { graphql } from "../gql";
 import { FlatList } from "react-native";
 import ScreenLayout from "../components/shared/ScreenLayout";
-import PhotoItem from "../components/shared/PhotoItem";
+import PhotoItem from "../components/photo/PhotoItem";
 
 type Props = NativeStackScreenProps<StackParamList, "Feed">;
 
@@ -57,6 +57,7 @@ export default function Feed({ navigation }: Props) {
             },
           })
         }
+        //refetch when scrolled down
         refreshing={refreshing}
         onRefresh={refresh}
         style={{ flex: 1, width: "100%" }}

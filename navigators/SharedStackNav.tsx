@@ -22,7 +22,7 @@ export type StackParamList = {
   Notifications: undefined;
   Me: undefined;
   Profile: IProfileProps | undefined;
-  Photo: undefined;
+  Photo: IPhotoProps | undefined;
   Likes: IPhotoProps | undefined;
   Comments: undefined;
 };

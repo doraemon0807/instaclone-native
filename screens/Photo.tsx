@@ -1,26 +1,64 @@
-import React from "react";
-import { Text, View } from "react-native";
+import React, { useState } from "react";
+import { RefreshControl, ScrollViewProps } from "react-native";
 import styled from "styled-components/native";
 import { IThemeProps } from "../styles";
 import { StackParamList } from "../navigators/SharedStackNav";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { graphql } from "../gql";
+import { useQuery } from "@apollo/client";
+import PhotoItem from "../components/photo/PhotoItem";
+import ScreenLayout from "../components/shared/ScreenLayout";
 
 type Props = NativeStackScreenProps<StackParamList, "Photo">;
 
-const Container = styled.View`
+const SEE_PHOTO = graphql(`
+  query seePhoto($photoId: Int!) {
+    seePhoto(id: $photoId) {
+      ...PhotoFragment
+      user {
+        ...UserFragment
+      }
+      comments {
+        ...CommentFragment
+      }
+    }
+  }
+`);
+
+const Container: React.FC<ScrollViewProps> = styled.ScrollView`
   background-color: ${(props: IThemeProps) => props.theme.bgColor};
-  flex: 1;
-  align-items: center;
-  justify-content: center;
 `;
 
-export default function Photo({ navigation }: Props) {
+export default function Photo({ route: { params }, navigation }: Props) {
+  const { data, loading, refetch } = useQuery(SEE_PHOTO, {
+    variables: {
+      photoId: params?.photoId!,
+    },
+  });
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    refetch();
+    setRefreshing(false);
+  };
+
   return (
-    <Container>
-      <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
-        <Text style={{ color: "white" }}>Profile</Text>
-      </TouchableOpacity>
-    </Container>
+    <ScreenLayout loading={loading}>
+      <Container
+        refreshControl={
+          <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
+        }
+        contentContainerStyle={{
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        {data?.seePhoto ? (
+          <PhotoItem navigation={navigation} {...data.seePhoto} />
+        ) : null}
+      </Container>
+    </ScreenLayout>
   );
 }
