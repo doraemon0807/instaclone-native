@@ -6,7 +6,7 @@ import { Asset } from "expo-asset";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { NavigationContainer } from "@react-navigation/native";
 import LoggedOutNav from "./navigators/LoggedOutNav";
-import { Appearance, useColorScheme } from "react-native";
+import { Appearance, StatusBar, useColorScheme } from "react-native";
 import { ThemeProvider } from "styled-components/native";
 import { darkTheme, lightTheme } from "./styles";
 import { ApolloProvider, useReactiveVar } from "@apollo/client";
@@ -112,6 +112,7 @@ export default function App() {
     <ApolloProvider client={client}>
       <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
         <NavigationContainer onReady={onLayoutRootView}>
+          <StatusBar barStyle={darkMode ? "light-content" : "dark-content"} />
           {isLoggedIn ? <LoggedInNav /> : <LoggedOutNav />}
         </NavigationContainer>
       </ThemeProvider>
