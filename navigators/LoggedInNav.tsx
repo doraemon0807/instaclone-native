@@ -1,14 +1,14 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import TabsNav from "./TabsNav";
-import Upload from "../screens/Upload";
+import UploadNav from "./UploadNav";
 
-export type StackParamList = {
+export type LoggedInNavStackParamList = {
   Tabs: undefined;
   Upload: undefined;
 };
 
-const Stack = createStackNavigator<StackParamList>();
+const Stack = createStackNavigator<LoggedInNavStackParamList>();
 
 export default function LoggedInNav() {
   return (
@@ -19,7 +19,7 @@ export default function LoggedInNav() {
       }}
     >
       <Stack.Screen name="Tabs" component={TabsNav} />
-      <Stack.Screen name="Upload" component={Upload} />
+      <Stack.Screen name="Upload" component={UploadNav} />
     </Stack.Navigator>
   );
 }

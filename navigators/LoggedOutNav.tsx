@@ -4,17 +4,17 @@ import Welcome from "../screens/Welcome";
 import Login, { ILoginForm } from "../screens/Login";
 import CreateAccount from "../screens/CreateAccount";
 
-export type RootStackParamList = {
+export type LoggedOutNavStackParamList = {
   Welcome: undefined;
   Login: ILoginForm | undefined;
   CreateAccount: undefined;
 };
 
-const RootStack = createStackNavigator<RootStackParamList>();
+const Stack = createStackNavigator<LoggedOutNavStackParamList>();
 
 export default function LoggedOutNav() {
   return (
-    <RootStack.Navigator
+    <Stack.Navigator
       initialRouteName="Welcome"
       screenOptions={{
         headerBackTitleVisible: false,
@@ -24,13 +24,13 @@ export default function LoggedOutNav() {
         presentation: "modal",
       }}
     >
-      <RootStack.Screen
+      <Stack.Screen
         name="Welcome"
         options={{ headerShown: false }}
         component={Welcome}
       />
-      <RootStack.Screen name="Login" component={Login} />
-      <RootStack.Screen name="CreateAccount" component={CreateAccount} />
-    </RootStack.Navigator>
+      <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="CreateAccount" component={CreateAccount} />
+    </Stack.Navigator>
   );
 }
