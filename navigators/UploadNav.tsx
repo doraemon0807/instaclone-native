@@ -10,12 +10,19 @@ import { Ionicons } from "@expo/vector-icons";
 
 export type UploadNavStackParamList = {
   Select: undefined;
+  UploadForm: IUploadFormProps | undefined;
 };
 
 export type UploadNavTabParamList = {
   TakePhoto: undefined;
   SelectPhoto: undefined;
+  Tabs: undefined;
+  UploadForm: IUploadFormProps | undefined;
 };
+
+interface IUploadFormProps {
+  file: string;
+}
 
 const Tab = createMaterialTopTabNavigator<UploadNavTabParamList>();
 const Stack = createStackNavigator<UploadNavStackParamList>();
@@ -41,7 +48,7 @@ export default function UploadNav() {
         },
       }}
     >
-      <Tab.Screen name="SelectPhoto">
+      <Tab.Screen name="SelectPhoto" options={{ title: "Gallery" }}>
         {() => (
           <Stack.Navigator
             screenOptions={{
@@ -69,7 +76,11 @@ export default function UploadNav() {
           </Stack.Navigator>
         )}
       </Tab.Screen>
-      <Tab.Screen name="TakePhoto" component={TakePhoto} />
+      <Tab.Screen
+        name="TakePhoto"
+        component={TakePhoto}
+        options={{ title: "Camera" }}
+      />
     </Tab.Navigator>
   );
 }

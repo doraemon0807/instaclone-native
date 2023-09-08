@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components/native";
 import { IThemeProps, lightTheme } from "../styles";
 import * as MediaLibrary from "expo-media-library";
-import { FlatList, Image, useWindowDimensions } from "react-native";
+import { Alert, FlatList, Image, useWindowDimensions } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { UploadNavStackParamList } from "../navigators/UploadNav";
@@ -72,6 +72,17 @@ export default function SelectPhoto({ navigation }: Props) {
     }
   };
 
+  const goToUpload = () => {
+    if (chosenPhoto !== "") {
+      navigation.navigate("UploadForm", {
+        file: chosenPhoto,
+      });
+    } else {
+      Alert.alert("You must choose a photo before proceeding.");
+      return;
+    }
+  };
+
   useEffect(() => {
     getPermissions();
   }, [ok]);
@@ -79,12 +90,12 @@ export default function SelectPhoto({ navigation }: Props) {
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <TouchableOpacity>
+        <TouchableOpacity onPress={goToUpload}>
           <HeaderRightText>Next</HeaderRightText>
         </TouchableOpacity>
       ),
     });
-  }, []);
+  }, [chosenPhoto]);
 
   //function to choose photo
   const choosePhoto = (uri: string) => {
