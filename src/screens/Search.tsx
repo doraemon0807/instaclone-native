@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   FlatList,
   TextInputProps,
   useWindowDimensions,
@@ -64,8 +65,14 @@ export default function Search({ navigation }: Props) {
 
   const numColumns = 3;
 
-  const { setValue, register, handleSubmit, getValues } =
-    useForm<QuerySearchPhotosArgs>();
+  const {
+    setValue,
+    register,
+    handleSubmit,
+    getValues,
+    clearErrors,
+    formState: { errors },
+  } = useForm<QuerySearchPhotosArgs>();
 
   // --- Lazy query: only run query when requested --- //
   const [startQueryFn, { loading, data, called, fetchMore, refetch }] =
@@ -119,9 +126,23 @@ export default function Search({ navigation }: Props) {
     });
     register("keyword", {
       required: true,
-      minLength: 3,
+      minLength: {
+        message: "Your keyword must be longer than 2 letters.",
+        value: 3,
+      },
     });
   }, [navigation]);
+
+  useEffect(() => {
+    if (errors.keyword?.message) {
+      Alert.alert("Invalid", errors.keyword.message, [
+        {
+          text: "Dismiss",
+          onPress: () => clearErrors("keyword"),
+        },
+      ]);
+    }
+  }, [errors.keyword]);
 
   return (
     <DismissKeyboard>

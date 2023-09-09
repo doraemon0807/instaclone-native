@@ -41,7 +41,7 @@ const authLink = setContext((_, { headers }) => {
 });
 
 const uploadHttpLink = createUploadLink({
-  uri: "https://huge-camels-read.loca.lt/graphql",
+  uri: "https://lovely-insects-read.loca.lt/graphql",
 });
 
 const onErrorLink = onError(({ graphQLErrors, networkError }) => {
