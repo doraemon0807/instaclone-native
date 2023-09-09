@@ -5,21 +5,17 @@ import * as Font from "expo-font";
 import { Asset } from "expo-asset";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { NavigationContainer } from "@react-navigation/native";
-import LoggedOutNav from "./navigators/LoggedOutNav";
 import { Appearance, StatusBar, useColorScheme } from "react-native";
 import { ThemeProvider } from "styled-components/native";
 import { darkTheme, lightTheme } from "./styles";
 import { ApolloProvider, useReactiveVar } from "@apollo/client";
 import client, { darkModeVar, isLoggedInVar, tokenVar } from "./apollo";
-import LoggedInNav from "./navigators/LoggedInNav";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { loadDevMessages, loadErrorMessages } from "@apollo/client/dev";
-import {
-  persistCache,
-  AsyncStorageWrapper,
-  CachePersistor,
-} from "apollo3-cache-persist";
+import { AsyncStorageWrapper, CachePersistor } from "apollo3-cache-persist";
 import { cache } from "./apollo";
+import LoggedInNav from "./src/navigators/LoggedInNav";
+import LoggedOutNav from "./src/navigators/LoggedOutNav";
 
 SplashScreen.preventAutoHideAsync();
 
