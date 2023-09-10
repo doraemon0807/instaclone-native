@@ -29,7 +29,7 @@ const Container: React.FC<ScrollViewProps> = styled.ScrollView`
   background-color: ${(props: IThemeProps) => props.theme.bgColor};
 `;
 
-export default function Photo({ route: { params }, navigation }: Props) {
+export default function Photo({ route: { params } }: Props) {
   const { data, loading, refetch } = useQuery(SEE_PHOTO, {
     variables: {
       photoId: params?.photoId!,
@@ -55,9 +55,7 @@ export default function Photo({ route: { params }, navigation }: Props) {
           alignItems: "center",
         }}
       >
-        {data?.seePhoto ? (
-          <PhotoItem navigation={navigation} {...data.seePhoto} />
-        ) : null}
+        {data?.seePhoto ? <PhotoItem {...data.seePhoto} /> : null}
       </Container>
     </ScreenLayout>
   );

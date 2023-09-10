@@ -6,6 +6,7 @@ import { graphql } from "../gql";
 import { useQuery } from "@apollo/client";
 import ScreenLayout from "../components/shared/ScreenLayout";
 import UserRow from "../components/user/UserRow";
+import Separator from "../components/shared/Separator";
 
 type Props = NativeStackScreenProps<StackParamList, "Likes">;
 
@@ -43,15 +44,7 @@ export default function Likes({ route: { params }, navigation }: Props) {
   return (
     <ScreenLayout loading={loading}>
       <FlatList
-        ItemSeparatorComponent={() => (
-          <View
-            style={{
-              width: "100%",
-              height: 1,
-              backgroundColor: "rgba(255,255,255,0.1)",
-            }}
-          ></View>
-        )}
+        ItemSeparatorComponent={Separator}
         // infinite scroll implementation
         onEndReachedThreshold={0.3}
         onEndReached={() =>

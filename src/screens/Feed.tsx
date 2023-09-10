@@ -23,7 +23,7 @@ const FEED_QUERY = graphql(`
   }
 `);
 
-export default function Feed({ navigation }: Props) {
+export default function Feed() {
   // --- QUERY --- //
   const { data, loading, refetch, fetchMore } = useQuery(FEED_QUERY, {
     variables: {
@@ -33,7 +33,7 @@ export default function Feed({ navigation }: Props) {
 
   // render item once data is loaded
   const renderPhoto = ({ item }: any) => {
-    return <PhotoItem navigation={navigation} {...item} />;
+    return <PhotoItem {...item} />;
   };
 
   // refresh when pulled down

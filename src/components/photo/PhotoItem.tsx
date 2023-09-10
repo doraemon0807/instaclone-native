@@ -10,6 +10,7 @@ import { darkModeVar } from "../../../apollo";
 import { graphql } from "../../gql";
 import { Photo, ToggleLikeMutation } from "../../gql/graphql";
 import Avatar from "../shared/Avatar";
+import { useNavigation } from "@react-navigation/native";
 
 const Container = styled.View``;
 const Header = styled.TouchableOpacity`
@@ -86,11 +87,6 @@ interface IPhotoItemProps {
       avatar?: string | null;
     };
   } | null> | null;
-  navigation: NativeStackNavigationProp<
-    StackParamList,
-    "Feed" | "Photo",
-    undefined
-  >;
 }
 
 interface IUpdateToggleLikeProps {
@@ -113,8 +109,13 @@ export default function PhotoItem({
   isLiked,
   likes,
   caption,
-  navigation,
 }: IPhotoItemProps) {
+  const navigation: NativeStackNavigationProp<
+    StackParamList,
+    "Feed" | "Photo",
+    undefined
+  > = useNavigation();
+
   const darkMode = useReactiveVar(darkModeVar);
 
   //Find width and height of the screen

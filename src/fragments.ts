@@ -36,3 +36,15 @@ export const USER_FRAGMENT = graphql(`
     isMe
   }
 `);
+
+export const ROOM_FRAGMENT = graphql(`
+  fragment RoomFragment on Room {
+    id
+    updatedAt
+    unreadTotal
+    users {
+      avatar
+      username
+    }
+  }
+`);

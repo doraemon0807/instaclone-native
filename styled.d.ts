@@ -11,5 +11,6 @@ declare module "styled-components/native" {
     accentNormal: string;
     accentDark: string;
     borderColor: string;
+    red: string;
   }
 }

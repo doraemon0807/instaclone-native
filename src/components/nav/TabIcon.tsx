@@ -2,7 +2,7 @@ import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 
 interface ITabIconProps {
-  iconName: "home" | "search" | "camera" | "heart" | "person";
+  iconName: "home" | "search" | "camera" | "paper-plane" | "person";
   focused: boolean;
   color: string;
   size?: number;

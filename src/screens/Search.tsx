@@ -3,6 +3,7 @@ import {
   ActivityIndicator,
   Alert,
   FlatList,
+  ListRenderItem,
   TextInputProps,
   useWindowDimensions,
 } from "react-native";
@@ -16,7 +17,7 @@ import { graphql } from "../gql";
 import { useLazyQuery, useReactiveVar } from "@apollo/client";
 import { darkModeVar } from "../../apollo";
 import PhotoRect from "../components/photo/PhotoRect";
-import { QuerySearchPhotosArgs } from "../gql/graphql";
+import { Photo, QuerySearchPhotosArgs } from "../gql/graphql";
 
 type Props = NativeStackScreenProps<StackParamList, "Search">;
 
@@ -105,7 +106,7 @@ export default function Search({ navigation }: Props) {
     />
   );
 
-  const renderItem = ({ item }: any) => {
+  const renderItem: ListRenderItem<Photo> = ({ item }) => {
     return (
       <PhotoRect navigation={navigation} numColumns={numColumns} {...item} />
     );
@@ -178,7 +179,7 @@ export default function Search({ navigation }: Props) {
                 justifyContent: "flex-start",
                 width,
               }}
-              data={data?.searchPhotos}
+              data={data?.searchPhotos as Photo[]}
               renderItem={renderItem}
               keyExtractor={(photo) => photo?.id + ""}
               numColumns={numColumns}

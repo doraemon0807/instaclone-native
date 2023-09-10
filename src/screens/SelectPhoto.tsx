@@ -2,11 +2,18 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components/native";
 import { IThemeProps, lightTheme } from "../../styles";
 import * as MediaLibrary from "expo-media-library";
-import { Alert, FlatList, Image, useWindowDimensions } from "react-native";
+import {
+  Alert,
+  FlatList,
+  Image,
+  ListRenderItem,
+  useWindowDimensions,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { UploadNavStackParamList } from "../navigators/UploadNav";
 import HeaderButton from "../components/header/HeaderButton";
+import { Photo } from "../gql/graphql";
 
 type Props = NativeStackScreenProps<UploadNavStackParamList, "Select">;
 
@@ -94,10 +101,10 @@ export default function SelectPhoto({ navigation }: Props) {
   };
 
   //renderitem for flatlist
-  const renderItem = ({ item: photo }: any) => (
-    <ImageContainer onPress={() => choosePhoto(photo.uri)}>
+  const renderItem: ListRenderItem<any> = ({ item }) => (
+    <ImageContainer onPress={() => choosePhoto(item.uri)}>
       <Image
-        source={{ uri: photo.uri }}
+        source={{ uri: item.uri }}
         style={{ width: width / numColumns, height: width / numColumns }}
       />
       <IconContainer>
@@ -105,7 +112,7 @@ export default function SelectPhoto({ navigation }: Props) {
           name="checkmark-circle"
           size={18}
           color={
-            photo.uri === chosenPhoto
+            item.uri === chosenPhoto
               ? lightTheme.accentLight
               : lightTheme.grayNormal
           }

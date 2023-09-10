@@ -10,6 +10,7 @@ export const lightTheme: DefaultTheme = {
   grayLight: "#efefef",
   grayNormal: "#a2a2a2",
   grayDark: "#737373",
+  red: "#ff3c3c",
 };
 
 export const darkTheme: DefaultTheme = {
@@ -22,6 +23,7 @@ export const darkTheme: DefaultTheme = {
   grayLight: "#737373",
   grayNormal: "#a2a2a2",
   grayDark: "#efefef",
+  red: "#ff3c3c",
 };
 
 export interface IThemeProps {

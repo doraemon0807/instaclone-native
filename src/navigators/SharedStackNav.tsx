@@ -7,7 +7,6 @@ import Profile from "../screens/Profile";
 import Photo from "../screens/Photo";
 import Feed from "../screens/Feed";
 import Me from "../screens/Me";
-import Notifications from "../screens/Notifications";
 import Search from "../screens/Search";
 import Likes from "../screens/Likes";
 import Comments from "../screens/Comments";
@@ -19,7 +18,7 @@ import styled from "styled-components/native";
 export type StackParamList = {
   Feed: undefined;
   Search: undefined;
-  Notifications: undefined;
+  Chats: undefined;
   Me: undefined;
   Profile: IProfileProps | undefined;
   Photo: IPhotoProps | undefined;
@@ -86,9 +85,7 @@ export default function SharedStackNav({ screenName }: ISharedStackNavProps) {
       {screenName === "Search" ? (
         <Stack.Screen name="Search" component={Search} />
       ) : null}
-      {screenName === "Notifications" ? (
-        <Stack.Screen name="Notifications" component={Notifications} />
-      ) : null}
+
       {screenName === "Me" ? <Stack.Screen name="Me" component={Me} /> : null}
 
       <Stack.Screen name="Profile" component={Profile} />

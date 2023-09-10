@@ -5,15 +5,16 @@ import { darkModeVar } from "../../apollo";
 import { darkTheme, lightTheme } from "../../styles";
 import { View } from "react-native";
 import TabIcon from "../components/nav/TabIcon";
-import StackNavFactory from "./SharedStackNav";
 import useUser from "../hook/useUser";
 import Avatar from "../components/shared/Avatar";
+import SharedStackNav from "./SharedStackNav";
+import MessagesNav from "./MessagesNav";
 
 export type TabsParamList = {
   TabFeed: undefined;
   TabSearch: undefined;
   Camera: undefined;
-  TabNotifications: undefined;
+  TabMessage: undefined;
   TabMe: undefined;
 };
 
@@ -49,7 +50,7 @@ export default function TabsNav() {
           ),
         }}
       >
-        {() => <StackNavFactory screenName="Feed" />}
+        {() => <SharedStackNav screenName="Feed" />}
       </Tabs.Screen>
       <Tabs.Screen
         name="TabSearch"
@@ -59,7 +60,7 @@ export default function TabsNav() {
           ),
         }}
       >
-        {() => <StackNavFactory screenName="Search" />}
+        {() => <SharedStackNav screenName="Search" />}
       </Tabs.Screen>
       <Tabs.Screen
         name="Camera"
@@ -79,15 +80,14 @@ export default function TabsNav() {
         }}
       />
       <Tabs.Screen
-        name="TabNotifications"
+        name="TabMessage"
+        component={MessagesNav}
         options={{
           tabBarIcon: ({ focused, color }) => (
-            <TabIcon iconName="heart" focused={focused} color={color} />
+            <TabIcon iconName="paper-plane" focused={focused} color={color} />
           ),
         }}
-      >
-        {() => <StackNavFactory screenName="Notifications" />}
-      </Tabs.Screen>
+      />
       <Tabs.Screen
         name="TabMe"
         options={{
@@ -103,7 +103,7 @@ export default function TabsNav() {
             ),
         }}
       >
-        {() => <StackNavFactory screenName="Me" />}
+        {() => <SharedStackNav screenName="Me" />}
       </Tabs.Screen>
     </Tabs.Navigator>
   );

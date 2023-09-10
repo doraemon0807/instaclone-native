@@ -26,7 +26,6 @@ export default function LoggedInNav() {
     <Stack.Navigator
       screenOptions={{
         presentation: "modal",
-        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
       }}
     >
       <Stack.Screen
