@@ -16,7 +16,7 @@ const MessageContainer = styled.View<IMessageContainerProps>`
   flex-direction: ${(props: IMessageContainerProps) =>
     props.isMine ? "row-reverse" : "row"};
   align-items: center;
-  padding: 10px;
+  padding: 0px 10px;
 `;
 const Author = styled.View``;
 
@@ -28,6 +28,7 @@ const MessageText = styled.Text`
   background-color: ${(props: IThemeProps) => props.theme.accentNormal};
   font-size: 16px;
   margin: 0px 10px;
+  max-width: 80%;
 `;
 
 export default function MessageItem({ message }: IMessageItemProps) {

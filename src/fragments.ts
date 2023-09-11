@@ -43,6 +43,7 @@ export const ROOM_FRAGMENT = graphql(`
     updatedAt
     unreadTotal
     users {
+      id
       avatar
       username
     }

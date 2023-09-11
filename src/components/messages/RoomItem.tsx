@@ -73,7 +73,7 @@ export default function RoomItem({ users, unreadTotal, id }: IRoomItemProps) {
   );
   const opponent = opponents?.[0];
 
-  const opponentNames = () => {
+  const opponentsNameGen = () => {
     let names = "";
     opponents?.map((opponent, index) => {
       if (index === 0) {
@@ -84,6 +84,8 @@ export default function RoomItem({ users, unreadTotal, id }: IRoomItemProps) {
     });
     return names;
   };
+
+  const opponentsNames = opponentsNameGen();
 
   const goToRoom = () => {
     navigation.navigate("MessageRoom", {
@@ -99,7 +101,7 @@ export default function RoomItem({ users, unreadTotal, id }: IRoomItemProps) {
         <Data>
           <ParticipantInfo>
             <Username ellipsizeMode="tail" numberOfLines={1}>
-              {opponentNames()}
+              {opponentsNames}
             </Username>
             <ParticipantCount>{opponents?.length}</ParticipantCount>
           </ParticipantInfo>
