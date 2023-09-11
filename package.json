@@ -30,6 +30,7 @@
     "expo-splash-screen": "~0.20.5",
     "expo-status-bar": "~1.6.0",
     "graphql": "^15.8.0",
+    "graphql-ws": "^5.14.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.45.4",

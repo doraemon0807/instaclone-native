@@ -3,12 +3,18 @@ import {
   InMemoryCache,
   createHttpLink,
   makeVar,
+  split,
 } from "@apollo/client";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setContext } from "@apollo/client/link/context";
-import { offsetLimitPagination } from "@apollo/client/utilities";
+import {
+  getMainDefinition,
+  offsetLimitPagination,
+} from "@apollo/client/utilities";
 import { onError } from "@apollo/client/link/error";
 import { createUploadLink } from "apollo-upload-client";
+import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
+import { createClient } from "graphql-ws";
 
 export const isLoggedInVar = makeVar(false);
 export const tokenVar = makeVar<string | null>("");
@@ -29,8 +35,7 @@ export const logUserOut = async () => {
   tokenVar(null);
 };
 
-const httpLink = createHttpLink({});
-
+//http link to authenticate with token
 const authLink = setContext((_, { headers }) => {
   return {
     headers: {
@@ -40,10 +45,12 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
+//http link to upload files
 const uploadHttpLink = createUploadLink({
-  uri: "https://stale-parrots-repeat.loca.lt/graphql",
+  uri: "https://angry-shrimps-vanish.loca.lt/graphql",
 });
 
+//http link to display errors
 const onErrorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
     console.log(`GraphQL Error: `, graphQLErrors);
@@ -53,6 +60,33 @@ const onErrorLink = onError(({ graphQLErrors, networkError }) => {
   }
 });
 
+//http links combined
+const httpLinks = authLink.concat(onErrorLink).concat(uploadHttpLink);
+
+//ws link for subscription
+const wsLink = new GraphQLWsLink(
+  createClient({
+    url: "ws://angry-shrimps-vanish.loca.lt/graphql",
+    connectionParams: () => ({
+      token: tokenVar(),
+    }),
+  })
+);
+
+//split function to choose either ws or http depending on the operation
+const splitLink = split(
+  ({ query }) => {
+    const definition = getMainDefinition(query);
+    return (
+      definition.kind === "OperationDefinition" &&
+      definition.operation === "subscription"
+    );
+  },
+  wsLink,
+  httpLinks
+);
+
+//cache configured to have offsetLimitPagination for seeFeed query
 export const cache = new InMemoryCache({
   typePolicies: {
     Query: {
@@ -60,11 +94,20 @@ export const cache = new InMemoryCache({
         seeFeed: offsetLimitPagination(),
       },
     },
+    Room: {
+      fields: {
+        messages: {
+          merge(existing, incoming) {
+            return incoming;
+          },
+        },
+      },
+    },
   },
 });
 
 const client = new ApolloClient({
-  link: authLink.concat(onErrorLink).concat(uploadHttpLink),
+  link: splitLink,
   cache,
 });
 

@@ -18,13 +18,16 @@ const documents = {
     "\n  fragment CommentFragment on Comment {\n    id\n    payload\n    isMine\n    createdAt\n    user {\n      id\n      username\n      avatar\n    }\n  }\n": types.CommentFragmentFragmentDoc,
     "\n  fragment UserFragment on User {\n    id\n    username\n    avatar\n    isFollowing\n    isMe\n  }\n": types.UserFragmentFragmentDoc,
     "\n  fragment RoomFragment on Room {\n    id\n    updatedAt\n    unreadTotal\n    users {\n      id\n      avatar\n      username\n    }\n  }\n": types.RoomFragmentFragmentDoc,
+    "\n  fragment MessageFragment on Message {\n    id\n    payload\n    read\n    isMine\n    user {\n      id\n      username\n      avatar\n    }\n    unreaders {\n      id\n      username\n    }\n  }\n": types.MessageFragmentFragmentDoc,
     "\n  query me {\n    me {\n      profile {\n        ...UserFragment\n      }\n    }\n  }\n": types.MeDocument,
     "\n  mutation createAccount(\n    $firstName: String!\n    $lastName: String!\n    $username: String!\n    $email: String!\n    $password: String!\n  ) {\n    createAccount(\n      firstName: $firstName\n      lastName: $lastName\n      username: $username\n      email: $email\n      password: $password\n    ) {\n      ok\n      error\n    }\n  }\n": types.CreateAccountDocument,
     "\n  query seeFeed($offset: Int) {\n    seeFeed(offset: $offset) {\n      ...PhotoFragment\n      user {\n        ...UserFragment\n      }\n      comments {\n        ...CommentFragment\n      }\n    }\n  }\n": types.SeeFeedDocument,
     "\n  query seePhotoLikes($photoId: Int!) {\n    seePhotoLikes(id: $photoId) {\n      ...UserFragment\n    }\n  }\n": types.SeePhotoLikesDocument,
     "\n  mutation login($username: String!, $password: String!) {\n    login(username: $username, password: $password) {\n      ok\n      token\n      error\n    }\n  }\n": types.LoginDocument,
-    "\n  query seeRoom($id: Int!) {\n    seeRoom(id: $id) {\n      id\n      messages {\n        id\n        payload\n        read\n        isMine\n        user {\n          username\n          avatar\n        }\n      }\n    }\n  }\n": types.SeeRoomDocument,
+    "\n  query seeRoom($id: Int!) {\n    seeRoom(id: $id) {\n      id\n      messages {\n        ...MessageFragment\n      }\n    }\n  }\n": types.SeeRoomDocument,
     "\n  mutation sendMessage($payload: String!, $roomId: Int, $userIds: [Int]) {\n    sendMessage(payload: $payload, roomId: $roomId, userIds: $userIds) {\n      ok\n      error\n      id\n    }\n  }\n": types.SendMessageDocument,
+    "\n  mutation readMessage($id: Int!) {\n    readMessage(id: $id) {\n      ok\n      error\n      id\n    }\n  }\n": types.ReadMessageDocument,
+    "\n  subscription roomUpdate($id: Int!) {\n    roomUpdate(id: $id) {\n      ...MessageFragment\n    }\n  }\n": types.RoomUpdateDocument,
     "\n          fragment NewMessage on Message {\n            id\n            payload\n            read\n            isMine\n            user {\n              username\n              avatar\n            }\n          }\n        ": types.NewMessageFragmentDoc,
     "\n  query seeRooms {\n    seeRooms {\n      ...RoomFragment\n    }\n  }\n": types.SeeRoomsDocument,
     "\n  query seePhoto($photoId: Int!) {\n    seePhoto(id: $photoId) {\n      ...PhotoFragment\n      user {\n        ...UserFragment\n      }\n      comments {\n        ...CommentFragment\n      }\n    }\n  }\n": types.SeePhotoDocument,
@@ -69,6 +72,10 @@ export function graphql(source: "\n  fragment RoomFragment on Room {\n    id\n  
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function graphql(source: "\n  fragment MessageFragment on Message {\n    id\n    payload\n    read\n    isMine\n    user {\n      id\n      username\n      avatar\n    }\n    unreaders {\n      id\n      username\n    }\n  }\n"): (typeof documents)["\n  fragment MessageFragment on Message {\n    id\n    payload\n    read\n    isMine\n    user {\n      id\n      username\n      avatar\n    }\n    unreaders {\n      id\n      username\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function graphql(source: "\n  query me {\n    me {\n      profile {\n        ...UserFragment\n      }\n    }\n  }\n"): (typeof documents)["\n  query me {\n    me {\n      profile {\n        ...UserFragment\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
@@ -89,11 +96,19 @@ export function graphql(source: "\n  mutation login($username: String!, $passwor
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query seeRoom($id: Int!) {\n    seeRoom(id: $id) {\n      id\n      messages {\n        id\n        payload\n        read\n        isMine\n        user {\n          username\n          avatar\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  query seeRoom($id: Int!) {\n    seeRoom(id: $id) {\n      id\n      messages {\n        id\n        payload\n        read\n        isMine\n        user {\n          username\n          avatar\n        }\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  query seeRoom($id: Int!) {\n    seeRoom(id: $id) {\n      id\n      messages {\n        ...MessageFragment\n      }\n    }\n  }\n"): (typeof documents)["\n  query seeRoom($id: Int!) {\n    seeRoom(id: $id) {\n      id\n      messages {\n        ...MessageFragment\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation sendMessage($payload: String!, $roomId: Int, $userIds: [Int]) {\n    sendMessage(payload: $payload, roomId: $roomId, userIds: $userIds) {\n      ok\n      error\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation sendMessage($payload: String!, $roomId: Int, $userIds: [Int]) {\n    sendMessage(payload: $payload, roomId: $roomId, userIds: $userIds) {\n      ok\n      error\n      id\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation readMessage($id: Int!) {\n    readMessage(id: $id) {\n      ok\n      error\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation readMessage($id: Int!) {\n    readMessage(id: $id) {\n      ok\n      error\n      id\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  subscription roomUpdate($id: Int!) {\n    roomUpdate(id: $id) {\n      ...MessageFragment\n    }\n  }\n"): (typeof documents)["\n  subscription roomUpdate($id: Int!) {\n    roomUpdate(id: $id) {\n      ...MessageFragment\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

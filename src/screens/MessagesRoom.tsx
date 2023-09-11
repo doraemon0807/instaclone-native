@@ -15,12 +15,18 @@ import { graphql } from "../gql";
 import {
   ApolloCache,
   gql,
+  useApolloClient,
   useMutation,
   useQuery,
   useReactiveVar,
 } from "@apollo/client";
 import ScreenLayout from "../components/shared/ScreenLayout";
-import { Message, SendMessageMutation } from "../gql/graphql";
+import {
+  Message,
+  RoomUpdateSubscription,
+  SeeRoomQuery,
+  SendMessageMutation,
+} from "../gql/graphql";
 import MessageItem from "../components/messages/MessageItem";
 import { SubmitHandler, useForm } from "react-hook-form";
 import useUser from "../hook/useUser";
@@ -34,14 +40,7 @@ const ROOM_QUERY = graphql(`
     seeRoom(id: $id) {
       id
       messages {
-        id
-        payload
-        read
-        isMine
-        user {
-          username
-          avatar
-        }
+        ...MessageFragment
       }
     }
   }
@@ -53,6 +52,24 @@ const SEND_MESSAGE_MUTATION = graphql(`
       ok
       error
       id
+    }
+  }
+`);
+
+const READ_MESSAGE = graphql(`
+  mutation readMessage($id: Int!) {
+    readMessage(id: $id) {
+      ok
+      error
+      id
+    }
+  }
+`);
+
+const ROOM_UPDATE = graphql(`
+  subscription roomUpdate($id: Int!) {
+    roomUpdate(id: $id) {
+      ...MessageFragment
     }
   }
 `);
@@ -88,10 +105,17 @@ interface IUpdateSendMessageProps {
   data?: SendMessageMutation | null;
 }
 
+interface ISubscriptionProps {
+  subscriptionData: {
+    data: RoomUpdateSubscription;
+  };
+}
+
 export default function MessagesRoom({ route, navigation }: Props) {
   const darkMode = useReactiveVar(darkModeVar);
-
   const { data: meData } = useUser();
+  const client = useApolloClient();
+
   // React Hook Form
   const { register, handleSubmit, setValue, getValues, watch } =
     useForm<IMessageForm>();
@@ -100,14 +124,75 @@ export default function MessagesRoom({ route, navigation }: Props) {
     register("message", { required: true });
   }, [register]);
 
-  //---query---//
-  const { data, loading } = useQuery(ROOM_QUERY, {
+  //---QUERY---//
+  const { data, loading, subscribeToMore } = useQuery(ROOM_QUERY, {
     variables: {
       id: route.params?.id!,
     },
   });
 
-  //---mutation---//
+  //function to update query for subscription
+  const updateQuery = (
+    prev: SeeRoomQuery,
+    { subscriptionData }: ISubscriptionProps
+  ) => {
+    const {
+      data: { roomUpdate: message },
+    } = subscriptionData;
+    //if message exists
+    if (message?.id) {
+      //create fragment from message object
+      const messageFragment = client.cache.writeFragment({
+        fragment: gql`
+          fragment NewMessage on Message {
+            id
+            payload
+            read
+            isMine
+            user {
+              username
+              avatar
+            }
+          }
+        `,
+        data: message,
+      });
+
+      //put created fragment to the existing cache
+      client.cache.modify({
+        id: `Room:${route.params?.id}`,
+        fields: {
+          messages(prev) {
+            const existingMessage = prev.find(
+              //to fix duplicated message issue: check if the message already exists in prev
+              (aMessage: { __ref: string }) =>
+                aMessage.__ref === messageFragment?.__ref
+            );
+            if (existingMessage) {
+              return prev;
+            }
+            return [messageFragment, ...prev];
+          },
+        },
+      });
+    }
+  };
+
+  useEffect(() => {
+    //check if we have a message
+    if (data?.seeRoom) {
+      //then subscribe
+      subscribeToMore({
+        document: ROOM_UPDATE,
+        variables: {
+          id: route.params?.id!,
+        },
+        updateQuery: updateQuery as () => SeeRoomQuery,
+      });
+    }
+  }, [data]);
+
+  //---MUTATION---//
   // function to update cache data
   const updateSendMessage = (
     cache: ApolloCache<Message>,
@@ -172,6 +257,7 @@ export default function MessagesRoom({ route, navigation }: Props) {
     }
   };
 
+  // mutation function for sending a message
   const [sendMessageMutation, { loading: sendingMessage }] = useMutation(
     SEND_MESSAGE_MUTATION,
     {
@@ -201,6 +287,7 @@ export default function MessagesRoom({ route, navigation }: Props) {
 
   const onSubmitValid: SubmitHandler<IMessageForm> = ({ message }) => {
     if (!sendingMessage) {
+      console.log(opponentsIds);
       sendMessageMutation({
         variables: {
           payload: message,
@@ -210,6 +297,12 @@ export default function MessagesRoom({ route, navigation }: Props) {
       });
     }
   };
+
+  //---mutation---//
+
+  //mutation function for readMessage
+  const [readMessageMutation, { loading: readingMessage }] =
+    useMutation(READ_MESSAGE);
 
   const renderItem: ListRenderItem<Message> = ({ item }) => (
     <MessageItem message={item} />

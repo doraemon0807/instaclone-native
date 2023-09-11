@@ -49,3 +49,21 @@ export const ROOM_FRAGMENT = graphql(`
     }
   }
 `);
+
+export const MESSAGE_FRAGMENT = graphql(`
+  fragment MessageFragment on Message {
+    id
+    payload
+    read
+    isMine
+    user {
+      id
+      username
+      avatar
+    }
+    unreaders {
+      id
+      username
+    }
+  }
+`);
