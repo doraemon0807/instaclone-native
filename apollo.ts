@@ -47,7 +47,7 @@ const authLink = setContext((_, { headers }) => {
 
 //http link to upload files
 const uploadHttpLink = createUploadLink({
-  uri: "https://angry-shrimps-vanish.loca.lt/graphql",
+  uri: "https://slow-pets-shop.loca.lt/graphql",
 });
 
 //http link to display errors
@@ -66,7 +66,7 @@ const httpLinks = authLink.concat(onErrorLink).concat(uploadHttpLink);
 //ws link for subscription
 const wsLink = new GraphQLWsLink(
   createClient({
-    url: "ws://angry-shrimps-vanish.loca.lt/graphql",
+    url: "ws://slow-pets-shop.loca.lt/graphql",
     connectionParams: () => ({
       token: tokenVar(),
     }),

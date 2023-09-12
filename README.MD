@@ -29,6 +29,8 @@ Instagram Clone - Mobile Apps
 To Do:
 
 [] Mark messages as read when seen
+[] Draw "last read" separator at the top of the unread message
+[] Tap on avatar in chatroom -> navigate to profile
 [] Chat Rooms: Drag down to refetch
 [] Add comments to photos
 [] Profile page

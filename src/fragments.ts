@@ -54,7 +54,8 @@ export const MESSAGE_FRAGMENT = graphql(`
   fragment MessageFragment on Message {
     id
     payload
-    read
+    readByMe
+    readByAll
     isMine
     user {
       id

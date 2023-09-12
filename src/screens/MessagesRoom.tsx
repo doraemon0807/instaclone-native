@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FlatList,
   KeyboardAvoidingView,
@@ -147,9 +147,11 @@ export default function MessagesRoom({ route, navigation }: Props) {
           fragment NewMessage on Message {
             id
             payload
-            read
+            readByMe
+            readByAll
             isMine
             user {
+              id
               username
               avatar
             }
@@ -219,8 +221,9 @@ export default function MessagesRoom({ route, navigation }: Props) {
         __typename: "Message",
         id: id!,
         payload: message,
+        readByAll: false,
         isMine: true,
-        read: true,
+        readByMe: true,
         user: {
           username: meData.me.profile?.username,
           avatar: meData.me.profile?.avatar,
@@ -231,12 +234,14 @@ export default function MessagesRoom({ route, navigation }: Props) {
       //create fragment from fake cache data
       const messageFragment = cache.writeFragment({
         fragment: gql`
-          fragment NewMessage on Message {
+          fragment fakeMessage on Message {
             id
             payload
-            read
+            readByAll
             isMine
+            readByMe
             user {
+              id
               username
               avatar
             }
@@ -304,9 +309,21 @@ export default function MessagesRoom({ route, navigation }: Props) {
   const [readMessageMutation, { loading: readingMessage }] =
     useMutation(READ_MESSAGE);
 
-  const renderItem: ListRenderItem<Message> = ({ item }) => (
-    <MessageItem message={item} />
-  );
+  // each message rendered in flatlist
+
+  const [unread, setUnread] = useState<true | false | null>(null);
+  const renderItem: ListRenderItem<Message> = ({ item, index }) => {
+    const read = item.unreaders?.map((unreader) => {
+      if (unreader?.id === meData?.me.profile?.id) {
+        return true;
+      }
+    });
+
+    console.log(read);
+
+    // console.log(unread);
+    return <MessageItem message={item} index={index} />;
+  };
 
   return (
     <KeyboardAvoidingView
