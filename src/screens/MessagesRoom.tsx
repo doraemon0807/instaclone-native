@@ -19,6 +19,7 @@ import {
   useMutation,
   useQuery,
   useReactiveVar,
+  useSubscription,
 } from "@apollo/client";
 import ScreenLayout from "../components/shared/ScreenLayout";
 import {
@@ -132,67 +133,69 @@ export default function MessagesRoom({ route, navigation }: Props) {
   });
 
   //function to update query for subscription
-  const updateQuery = (
-    prev: SeeRoomQuery,
-    { subscriptionData }: ISubscriptionProps
-  ) => {
-    const {
-      data: { roomUpdate: message },
-    } = subscriptionData;
-    //if message exists
-    if (message?.id) {
-      //create fragment from message object
-      const messageFragment = client.cache.writeFragment({
-        fragment: gql`
-          fragment NewMessage on Message {
-            id
-            payload
-            readByMe
-            readByAll
-            isMine
-            user {
-              id
-              username
-              avatar
-            }
-          }
-        `,
-        data: message,
-      });
+  const updateQuery = (prev: any, { subscriptionData }: any) => {
+    console.log("SUBSCRIPTION!");
+    // const {
+    //   data: { roomUpdate: message },
+    // } = subscriptionData;
+    // //if message exists
+    // if (message?.id) {
+    //   //create fragment from message object
+    //   const messageFragment = client.cache.writeFragment({
+    //     fragment: gql`
+    //       fragment NewMessage on Message {
+    //         id
+    //         payload
+    //         readByMe
+    //         readByAll
+    //         isMine
+    //         user {
+    //           id
+    //           username
+    //           avatar
+    //         }
+    //       }
+    //     `,
+    //     data: message,
+    //   });
 
-      //put created fragment to the existing cache
-      client.cache.modify({
-        id: `Room:${route.params?.id}`,
-        fields: {
-          messages(prev) {
-            const existingMessage = prev.find(
-              //to fix duplicated message issue: check if the message already exists in prev
-              (aMessage: { __ref: string }) =>
-                aMessage.__ref === messageFragment?.__ref
-            );
-            if (existingMessage) {
-              return prev;
-            }
-            return [messageFragment, ...prev];
-          },
-        },
-      });
-    }
+    //   //put created fragment to the existing cache
+    //   client.cache.modify({
+    //     id: `Room:${route.params?.id}`,
+    //     fields: {
+    //       messages(prev) {
+    //         const existingMessage = prev.find(
+    //           //to fix duplicated message issue: check if the message already exists in prev
+    //           (aMessage: { __ref: string }) =>
+    //             aMessage.__ref === messageFragment?.__ref
+    //         );
+    //         if (existingMessage) {
+    //           return prev;
+    //         }
+    //         return [messageFragment, ...prev];
+    //       },
+    //     },
+    //   });
+    // }
+    return prev;
   };
+
+  const [subscribed, setSubscribed] = useState(false);
 
   useEffect(() => {
     //check if we have a message
-    if (data?.seeRoom) {
+    if (data?.seeRoom && !subscribed) {
       //then subscribe
       subscribeToMore({
         document: ROOM_UPDATE,
         variables: {
           id: route.params?.id!,
         },
-        updateQuery: updateQuery as () => SeeRoomQuery,
+        updateQuery,
       });
+      setSubscribed(true);
     }
-  }, [data]);
+  }, [data, subscribed]);
 
   //---MUTATION---//
   // function to update cache data
@@ -200,9 +203,11 @@ export default function MessagesRoom({ route, navigation }: Props) {
     cache: ApolloCache<Message>,
     result: IUpdateSendMessageProps
   ) => {
+    console.log("UPDATE MESSAGE");
     if (!result.data) {
       return;
     }
+
     const {
       data: {
         sendMessage: { ok, error, id },
@@ -286,13 +291,15 @@ export default function MessagesRoom({ route, navigation }: Props) {
       title:
         route.params?.opponents?.length === 1
           ? route.params?.opponents?.[0].username
-          : `Group Chat (${route.params?.opponents?.length})`,
+          : `Group Chat (${
+              route.params?.opponents?.length &&
+              route.params?.opponents?.length + 1
+            })`,
     });
   }, []);
 
   const onSubmitValid: SubmitHandler<IMessageForm> = ({ message }) => {
     if (!sendingMessage) {
-      console.log(opponentsIds);
       sendMessageMutation({
         variables: {
           payload: message,
@@ -306,23 +313,30 @@ export default function MessagesRoom({ route, navigation }: Props) {
   //---mutation---//
 
   //mutation function for readMessage
-  const [readMessageMutation, { loading: readingMessage }] =
-    useMutation(READ_MESSAGE);
+  // const [readMessageMutation, { loading: readingMessage }] = useMutation(
+  //   READ_MESSAGE,
+  //   {
+  //     refetchQueries: [{ query: SEE_ROOMS_QUERY }],
+  //   }
+  // );
+
+  // useEffect(() => {
+  //   if (data?.seeRoom?.messages) {
+  //     data.seeRoom.messages.map((message) => {
+  //       if (message) {
+  //         readMessageMutation({
+  //           variables: {
+  //             id: message.id!,
+  //           },
+  //         });
+  //       }
+  //     });
+  //   }
+  // }, []);
 
   // each message rendered in flatlist
-
-  const [unread, setUnread] = useState<true | false | null>(null);
   const renderItem: ListRenderItem<Message> = ({ item, index }) => {
-    const read = item.unreaders?.map((unreader) => {
-      if (unreader?.id === meData?.me.profile?.id) {
-        return true;
-      }
-    });
-
-    console.log(read);
-
-    // console.log(unread);
-    return <MessageItem message={item} index={index} />;
+    return <MessageItem message={item} />;
   };
 
   return (

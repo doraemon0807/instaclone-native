@@ -103,7 +103,9 @@ export default function RoomItem({ users, unreadTotal, id }: IRoomItemProps) {
             <Username ellipsizeMode="tail" numberOfLines={1}>
               {opponentsNames}
             </Username>
-            <ParticipantCount>{opponents?.length}</ParticipantCount>
+            <ParticipantCount>
+              {opponents?.length && opponents?.length + 1}
+            </ParticipantCount>
           </ParticipantInfo>
           {unreadTotal !== 0 && (
             <UnreadText>

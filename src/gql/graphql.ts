@@ -75,7 +75,7 @@ export type Message = {
   readByAll: Scalars['Boolean']['output'];
   readByMe: Scalars['Boolean']['output'];
   room: Room;
-  unreaders?: Maybe<Array<Maybe<User>>>;
+  unreaders: Array<Maybe<User>>;
   updatedAt: Scalars['String']['output'];
   user: User;
 };
@@ -410,7 +410,7 @@ export type UserFragmentFragment = { __typename?: 'User', id: number, username: 
 
 export type RoomFragmentFragment = { __typename?: 'Room', id: number, updatedAt: string, unreadTotal: number, users?: Array<{ __typename?: 'User', id: number, avatar?: string | null, username: string } | null> | null };
 
-export type MessageFragmentFragment = { __typename?: 'Message', id: number, payload: string, readByMe: boolean, readByAll: boolean, isMine: boolean, user: { __typename?: 'User', id: number, username: string, avatar?: string | null }, unreaders?: Array<{ __typename?: 'User', id: number, username: string } | null> | null };
+export type MessageFragmentFragment = { __typename?: 'Message', id: number, payload: string, readByMe: boolean, readByAll: boolean, isMine: boolean, user: { __typename?: 'User', id: number, username: string, avatar?: string | null }, unreaders: Array<{ __typename?: 'User', id: number, username: string } | null> };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -455,7 +455,7 @@ export type SeeRoomQueryVariables = Exact<{
 }>;
 
 
-export type SeeRoomQuery = { __typename?: 'Query', seeRoom?: { __typename?: 'Room', id: number, messages?: Array<{ __typename?: 'Message', id: number, payload: string, readByMe: boolean, readByAll: boolean, isMine: boolean, user: { __typename?: 'User', id: number, username: string, avatar?: string | null }, unreaders?: Array<{ __typename?: 'User', id: number, username: string } | null> | null } | null> | null } | null };
+export type SeeRoomQuery = { __typename?: 'Query', seeRoom?: { __typename?: 'Room', id: number, messages?: Array<{ __typename?: 'Message', id: number, payload: string, readByMe: boolean, readByAll: boolean, isMine: boolean, user: { __typename?: 'User', id: number, username: string, avatar?: string | null }, unreaders: Array<{ __typename?: 'User', id: number, username: string } | null> } | null> | null } | null };
 
 export type SendMessageMutationVariables = Exact<{
   payload: Scalars['String']['input'];
@@ -478,7 +478,7 @@ export type RoomUpdateSubscriptionVariables = Exact<{
 }>;
 
 
-export type RoomUpdateSubscription = { __typename?: 'Subscription', roomUpdate?: { __typename?: 'Message', id: number, payload: string, readByMe: boolean, readByAll: boolean, isMine: boolean, user: { __typename?: 'User', id: number, username: string, avatar?: string | null }, unreaders?: Array<{ __typename?: 'User', id: number, username: string } | null> | null } | null };
+export type RoomUpdateSubscription = { __typename?: 'Subscription', roomUpdate?: { __typename?: 'Message', id: number, payload: string, readByMe: boolean, readByAll: boolean, isMine: boolean, user: { __typename?: 'User', id: number, username: string, avatar?: string | null }, unreaders: Array<{ __typename?: 'User', id: number, username: string } | null> } | null };
 
 export type NewMessageFragment = { __typename?: 'Message', id: number, payload: string, readByMe: boolean, readByAll: boolean, isMine: boolean, user: { __typename?: 'User', id: number, username: string, avatar?: string | null } };
 
