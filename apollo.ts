@@ -49,7 +49,7 @@ const authLink = setContext((_, { headers }) => {
 
 //http link to upload files
 const uploadHttpLink = createUploadLink({
-  uri: "https://thick-clouds-learn.loca.lt/graphql",
+  uri: "https://sour-moose-train.loca.lt/graphql",
 });
 
 //http link to display errors
@@ -66,10 +66,10 @@ const onErrorLink = onError(({ graphQLErrors, networkError }) => {
 const httpLinks = authLink.concat(onErrorLink).concat(uploadHttpLink);
 
 //ws link for subscription
-
 const wsLink = new WebSocketLink({
-  uri: "ws://hick-clouds-learn.loca.lt/graphql",
+  uri: "ws://sour-moose-train.loca.lt/graphql",
   options: {
+    reconnect: true,
     connectionParams: () => ({
       token: tokenVar(),
     }),
@@ -77,7 +77,7 @@ const wsLink = new WebSocketLink({
 });
 
 // const wsLink = new WebSocketLink(
-//   new SubscriptionClient("ws://thick-clouds-learn.loca.lt/graphql", {
+//   new SubscriptionClient("ws://sour-moose-train.loca.lt/graphql", {
 //     connectionParams: () => ({
 //       token: tokenVar(),
 //     }),
@@ -86,7 +86,7 @@ const wsLink = new WebSocketLink({
 
 // const wsLink = new GraphQLWsLink(
 //   createClient({
-//     url: "ws://thick-clouds-learn.loca.lt/graphql",
+//     url: "ws://sour-moose-train.loca.lt/graphql",
 //     connectionParams: () => ({
 //       token: tokenVar(),
 //     }),

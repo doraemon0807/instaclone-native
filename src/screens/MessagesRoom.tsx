@@ -115,89 +115,9 @@ interface ISubscriptionProps {
 export default function MessagesRoom({ route, navigation }: Props) {
   const darkMode = useReactiveVar(darkModeVar);
   const { data: meData } = useUser();
-  const client = useApolloClient();
-
   // React Hook Form
   const { register, handleSubmit, setValue, getValues, watch } =
     useForm<IMessageForm>();
-
-  useEffect(() => {
-    register("message", { required: true });
-  }, [register]);
-
-  //---QUERY---//
-  const { data, loading, subscribeToMore } = useQuery(ROOM_QUERY, {
-    variables: {
-      id: route.params?.id!,
-    },
-  });
-
-  //function to update query for subscription
-  const updateQuery = (
-    prev: SeeRoomQuery,
-    { subscriptionData }: ISubscriptionProps
-  ) => {
-    console.log("SUBSCRIPTION!");
-    const {
-      data: { roomUpdate: message },
-    } = subscriptionData;
-    //if message exists
-    if (message?.id) {
-      //create fragment from message object
-      const messageFragment = client.cache.writeFragment({
-        fragment: gql`
-          fragment NewMessage on Message {
-            id
-            payload
-            readByMe
-            readByAll
-            isMine
-            user {
-              id
-              username
-              avatar
-            }
-          }
-        `,
-        data: message,
-      });
-
-      //put created fragment to the existing cache
-      client.cache.modify({
-        id: `Room:${route.params?.id}`,
-        fields: {
-          messages(prev) {
-            const existingMessage = prev.find(
-              //to fix duplicated message issue: check if the message already exists in prev
-              (aMessage: { __ref: string }) =>
-                aMessage.__ref === messageFragment?.__ref
-            );
-            if (existingMessage) {
-              return prev;
-            }
-            return [messageFragment, ...prev];
-          },
-        },
-      });
-    }
-  };
-
-  const [subscribed, setSubscribed] = useState(false);
-
-  useEffect(() => {
-    //check if we have a message
-    if (data?.seeRoom && !subscribed) {
-      //then subscribe
-      subscribeToMore({
-        document: ROOM_UPDATE,
-        variables: {
-          id: route.params?.id!,
-        },
-        updateQuery: updateQuery as () => SeeRoomQuery,
-      });
-      setSubscribed(true);
-    }
-  }, [data, subscribed]);
 
   //---MUTATION---//
   // function to update cache data
@@ -276,6 +196,88 @@ export default function MessagesRoom({ route, navigation }: Props) {
       update: updateSendMessage,
     }
   );
+
+  //--- QUERY && SUBSCRIPTION ---//
+  const { data, loading, subscribeToMore } = useQuery(ROOM_QUERY, {
+    variables: {
+      id: route.params?.id!,
+    },
+  });
+
+  const client = useApolloClient();
+
+  //function to update query for subscription
+  const updateQuery = (
+    prev: SeeRoomQuery,
+    { subscriptionData }: ISubscriptionProps
+  ) => {
+    console.log(prev);
+    console.log("+++++++++++++++++");
+    console.log(subscriptionData);
+    // const {
+    //   data: { roomUpdate: message },
+    // } = subscriptionData;
+    // //if message exists
+    // if (message?.id) {
+    //   //create fragment from message object
+    //   const messageFragment = client.cache.writeFragment({
+    //     fragment: gql`
+    //       fragment NewMessage on Message {
+    //         id
+    //         payload
+    //         readByMe
+    //         readByAll
+    //         isMine
+    //         user {
+    //           id
+    //           username
+    //           avatar
+    //         }
+    //       }
+    //     `,
+    //     data: message,
+    //   });
+
+    //   //put created fragment to the existing cache
+    //   client.cache.modify({
+    //     id: `Room:${route.params?.id}`,
+    //     fields: {
+    //       messages(prev) {
+    //         const existingMessage = prev.find(
+    //           //to fix duplicated message issue: check if the message already exists in prev
+    //           (aMessage: { __ref: string }) =>
+    //             aMessage.__ref === messageFragment?.__ref
+    //         );
+    //         if (existingMessage) {
+    //           return prev;
+    //         }
+    //         return [messageFragment, ...prev];
+    //       },
+    //     },
+    //   });
+    // }
+  };
+
+  const [subscribed, setSubscribed] = useState(false);
+
+  useEffect(() => {
+    //check if we have a message
+    if (data?.seeRoom && !subscribed) {
+      //then subscribe
+      subscribeToMore({
+        document: ROOM_UPDATE,
+        variables: {
+          id: route.params?.id!,
+        },
+        updateQuery: updateQuery as any,
+      });
+      setSubscribed(true);
+    }
+  }, [data, subscribed]);
+
+  useEffect(() => {
+    register("message", { required: true });
+  }, [register]);
 
   const opponentsIdArray = () => {
     let ids: number[] = [];
