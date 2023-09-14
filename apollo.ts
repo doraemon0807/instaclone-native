@@ -15,6 +15,8 @@ import { onError } from "@apollo/client/link/error";
 import { createUploadLink } from "apollo-upload-client";
 import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import { createClient } from "graphql-ws";
+import { SubscriptionClient } from "subscriptions-transport-ws";
+import { WebSocketLink } from "@apollo/client/link/ws";
 
 export const isLoggedInVar = makeVar(false);
 export const tokenVar = makeVar<string | null>("");
@@ -47,7 +49,7 @@ const authLink = setContext((_, { headers }) => {
 
 //http link to upload files
 const uploadHttpLink = createUploadLink({
-  uri: "https://dirty-candies-clap.loca.lt/graphql",
+  uri: "https://thick-clouds-learn.loca.lt/graphql",
 });
 
 //http link to display errors
@@ -64,14 +66,31 @@ const onErrorLink = onError(({ graphQLErrors, networkError }) => {
 const httpLinks = authLink.concat(onErrorLink).concat(uploadHttpLink);
 
 //ws link for subscription
-const wsLink = new GraphQLWsLink(
-  createClient({
-    url: "ws://dirty-candies-clap.loca.lt/graphql",
+
+const wsLink = new WebSocketLink({
+  uri: "ws://hick-clouds-learn.loca.lt/graphql",
+  options: {
     connectionParams: () => ({
       token: tokenVar(),
     }),
-  })
-);
+  },
+});
+
+// const wsLink = new WebSocketLink(
+//   new SubscriptionClient("ws://thick-clouds-learn.loca.lt/graphql", {
+//     connectionParams: () => ({
+//       token: tokenVar(),
+//     }),
+//   })
+// );
+// const wsLink = new GraphQLWsLink(
+//   createClient({
+//     url: "ws://thick-clouds-learn.loca.lt/graphql",
+//     connectionParams: () => ({
+//       token: tokenVar(),
+//     }),
+//   })
+// );
 
 //split function to choose either ws or http depending on the operation
 const splitLink = split(

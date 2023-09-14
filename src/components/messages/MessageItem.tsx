@@ -3,11 +3,6 @@ import Avatar from "../shared/Avatar";
 import { Message } from "../../gql/graphql";
 import styled from "styled-components/native";
 import { IThemeProps } from "../../../styles";
-import Separator from "../shared/Separator";
-import { View } from "react-native";
-import { graphql } from "../../gql";
-import { useMutation } from "@apollo/client";
-import useUser from "../../hook/useUser";
 
 interface IMessageItemProps {
   message: Message;
