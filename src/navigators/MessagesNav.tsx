@@ -10,15 +10,22 @@ import { darkModeVar } from "../../apollo";
 import { darkTheme, lightTheme } from "../../styles";
 import { Ionicons } from "@expo/vector-icons";
 import { User } from "../gql/graphql";
+import Profile from "../screens/Profile";
 
 export type MessagesNavStackParamList = {
   MessageRooms: undefined;
   MessageRoom: IMessageRoomProps | undefined;
+  Profile: IProfileProps | undefined;
 };
 
 interface IMessageRoomProps {
   id: number;
   opponents?: User[];
+}
+
+interface IProfileProps {
+  username: string;
+  id: number;
 }
 
 const Stack = createStackNavigator<MessagesNavStackParamList>();
@@ -56,6 +63,7 @@ export default function MessagesNav() {
           ),
         }}
       />
+      <Stack.Screen name="Profile" component={Profile} />
     </Stack.Navigator>
   );
 }

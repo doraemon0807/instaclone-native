@@ -26,6 +26,7 @@ export default function Welcome({ navigation }: Props) {
   return (
     <AuthLayout>
       <Button
+        $accent
         disabled={false}
         onPress={goToCreateAccount}
         text="Create New Account"

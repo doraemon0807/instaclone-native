@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { FlatList, ListRenderItem } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { MessagesNavStackParamList } from "../navigators/MessagesNav";
@@ -19,7 +19,7 @@ const SEE_ROOMS_QUERY = graphql(`
 
 export default function MessagesRooms() {
   // --- query --- //
-  const { data, loading } = useQuery(SEE_ROOMS_QUERY);
+  const { data, loading, refetch } = useQuery(SEE_ROOMS_QUERY);
 
   const renderItem: ListRenderItem<Room> = ({ item }) => (
     <RoomItem
@@ -29,6 +29,15 @@ export default function MessagesRooms() {
     />
   );
 
+  // refresh when pulled down
+  const [refreshing, setRefreshing] = useState(false);
+
+  const refresh = async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  };
+
   return (
     <ScreenLayout loading={loading}>
       <FlatList
@@ -37,6 +46,10 @@ export default function MessagesRooms() {
         keyExtractor={(room) => room?.id + ""}
         renderItem={renderItem}
         ItemSeparatorComponent={Separator}
+        //refetch when scrolled down
+        refreshing={refreshing}
+        onRefresh={refresh}
+        showsVerticalScrollIndicator={false}
       />
     </ScreenLayout>
   );

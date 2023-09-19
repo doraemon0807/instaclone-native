@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Avatar from "../shared/Avatar";
 import { Message } from "../../gql/graphql";
 import styled from "styled-components/native";
 import { IThemeProps } from "../../../styles";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useNavigation } from "@react-navigation/native";
+import { MessagesNavStackParamList } from "../../navigators/MessagesNav";
 
 interface IMessageItemProps {
   message: Message;
@@ -20,7 +23,7 @@ const MessageContainer = styled.View<IMessageContainerProps>`
   align-items: center;
   padding: 0px 10px;
 `;
-const Author = styled.View``;
+const Author = styled.TouchableOpacity``;
 
 const MessageText = styled.Text`
   color: ${(props: IThemeProps) => props.theme.fontColor};
@@ -34,10 +37,24 @@ const MessageText = styled.Text`
 `;
 
 export default function MessageItem({ message }: IMessageItemProps) {
+  const navigation: NativeStackNavigationProp<
+    MessagesNavStackParamList,
+    "Profile",
+    undefined
+  > = useNavigation();
+
+  //function to go to profile
+  const goToProfile = () => {
+    navigation.navigate("Profile", {
+      username: message.user.username,
+      id: message.user.id,
+    });
+  };
+
   return (
     <MessageWrapper>
       <MessageContainer isMine={message.isMine}>
-        <Author>
+        <Author onPress={goToProfile}>
           <Avatar size="small" avatarUrl={message.user.avatar} />
         </Author>
         <MessageText>{message.payload}</MessageText>

@@ -28,10 +28,12 @@ const documents = {
     "\n  mutation sendMessage($payload: String!, $roomId: Int, $userIds: [Int]) {\n    sendMessage(payload: $payload, roomId: $roomId, userIds: $userIds) {\n      ok\n      error\n      id\n    }\n  }\n": types.SendMessageDocument,
     "\n  mutation readMessage($id: Int!) {\n    readMessage(id: $id) {\n      ok\n      error\n      id\n    }\n  }\n": types.ReadMessageDocument,
     "\n  subscription roomUpdate($id: Int!) {\n    roomUpdate(id: $id) {\n      ...MessageFragment\n    }\n  }\n": types.RoomUpdateDocument,
-    "\n          fragment NewMessage on Message {\n            id\n            payload\n            readByMe\n            readByAll\n            isMine\n            user {\n              id\n              username\n              avatar\n            }\n          }\n        ": types.NewMessageFragmentDoc,
     "\n          fragment fakeMessage on Message {\n            id\n            payload\n            readByAll\n            isMine\n            readByMe\n            user {\n              id\n              username\n              avatar\n            }\n          }\n        ": types.FakeMessageFragmentDoc,
     "\n  query seeRooms {\n    seeRooms {\n      ...RoomFragment\n    }\n  }\n": types.SeeRoomsDocument,
     "\n  query seePhoto($photoId: Int!) {\n    seePhoto(id: $photoId) {\n      ...PhotoFragment\n      user {\n        ...UserFragment\n      }\n      comments {\n        ...CommentFragment\n      }\n    }\n  }\n": types.SeePhotoDocument,
+    "\n  query seeProfile($username: String!) {\n    seeProfile(username: $username) {\n      ok\n      error\n      profile {\n        ...UserFragment\n        createdAt\n        firstName\n        lastName\n        bio\n        totalFollowing\n        totalFollowers\n        photoCount\n        fullName\n        photos {\n          ...PhotoFragment\n        }\n        savedPhotos {\n          ...PhotoFragment\n        }\n        taggedPhotos {\n          ...PhotoFragment\n        }\n      }\n    }\n  }\n": types.SeeProfileDocument,
+    "\n  mutation unfollowUser($username: String!) {\n    unfollowUser(username: $username) {\n      ok\n      error\n    }\n  }\n": types.UnfollowUserDocument,
+    "\n  mutation followUser($username: String!) {\n    followUser(username: $username) {\n      ok\n      error\n    }\n  }\n": types.FollowUserDocument,
     "\n  query searchPhotos($keyword: String!, $offset: Int) {\n    searchPhotos(keyword: $keyword, offset: $offset) {\n      id\n      file\n    }\n  }\n": types.SearchPhotosDocument,
     "\n  mutation uploadPhoto($file: Upload!, $caption: String) {\n    uploadPhoto(file: $file, caption: $caption) {\n      ok\n      error\n      photo {\n        ...PhotoFragment\n        user {\n          ...UserFragment\n        }\n      }\n    }\n  }\n": types.UploadPhotoDocument,
 };
@@ -113,10 +115,6 @@ export function graphql(source: "\n  subscription roomUpdate($id: Int!) {\n    r
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n          fragment NewMessage on Message {\n            id\n            payload\n            readByMe\n            readByAll\n            isMine\n            user {\n              id\n              username\n              avatar\n            }\n          }\n        "): (typeof documents)["\n          fragment NewMessage on Message {\n            id\n            payload\n            readByMe\n            readByAll\n            isMine\n            user {\n              id\n              username\n              avatar\n            }\n          }\n        "];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
 export function graphql(source: "\n          fragment fakeMessage on Message {\n            id\n            payload\n            readByAll\n            isMine\n            readByMe\n            user {\n              id\n              username\n              avatar\n            }\n          }\n        "): (typeof documents)["\n          fragment fakeMessage on Message {\n            id\n            payload\n            readByAll\n            isMine\n            readByMe\n            user {\n              id\n              username\n              avatar\n            }\n          }\n        "];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
@@ -126,6 +124,18 @@ export function graphql(source: "\n  query seeRooms {\n    seeRooms {\n      ...
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  query seePhoto($photoId: Int!) {\n    seePhoto(id: $photoId) {\n      ...PhotoFragment\n      user {\n        ...UserFragment\n      }\n      comments {\n        ...CommentFragment\n      }\n    }\n  }\n"): (typeof documents)["\n  query seePhoto($photoId: Int!) {\n    seePhoto(id: $photoId) {\n      ...PhotoFragment\n      user {\n        ...UserFragment\n      }\n      comments {\n        ...CommentFragment\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query seeProfile($username: String!) {\n    seeProfile(username: $username) {\n      ok\n      error\n      profile {\n        ...UserFragment\n        createdAt\n        firstName\n        lastName\n        bio\n        totalFollowing\n        totalFollowers\n        photoCount\n        fullName\n        photos {\n          ...PhotoFragment\n        }\n        savedPhotos {\n          ...PhotoFragment\n        }\n        taggedPhotos {\n          ...PhotoFragment\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  query seeProfile($username: String!) {\n    seeProfile(username: $username) {\n      ok\n      error\n      profile {\n        ...UserFragment\n        createdAt\n        firstName\n        lastName\n        bio\n        totalFollowing\n        totalFollowers\n        photoCount\n        fullName\n        photos {\n          ...PhotoFragment\n        }\n        savedPhotos {\n          ...PhotoFragment\n        }\n        taggedPhotos {\n          ...PhotoFragment\n        }\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation unfollowUser($username: String!) {\n    unfollowUser(username: $username) {\n      ok\n      error\n    }\n  }\n"): (typeof documents)["\n  mutation unfollowUser($username: String!) {\n    unfollowUser(username: $username) {\n      ok\n      error\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation followUser($username: String!) {\n    followUser(username: $username) {\n      ok\n      error\n    }\n  }\n"): (typeof documents)["\n  mutation followUser($username: String!) {\n    followUser(username: $username) {\n      ok\n      error\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

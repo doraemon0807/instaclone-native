@@ -150,6 +150,7 @@ export default function CreateAccount({ navigation }: Props) {
         lastOne={true}
       />
       <Button
+        $accent
         loading={loading}
         text="Create Account"
         disabled={false}

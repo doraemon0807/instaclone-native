@@ -6,7 +6,12 @@ import { logUserOut } from "../../apollo";
 import Button from "../components/shared/Button";
 import useUser from "../hook/useUser";
 import { StackParamList } from "../navigators/SharedStackNav";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import {
+  NativeStackNavigationProp,
+  NativeStackScreenProps,
+} from "@react-navigation/native-stack";
+import Profile from "./Profile";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 
 type Props = NativeStackScreenProps<StackParamList, "Me">;
 
@@ -20,6 +25,13 @@ const Container = styled.View`
 export default function Me({ navigation }: Props) {
   const { data } = useUser();
 
+  const profileNavigation: NativeStackNavigationProp<
+    StackParamList,
+    "Profile",
+    undefined
+  > = useNavigation();
+  const profileRoute: RouteProp<StackParamList, "Profile"> = useRoute();
+
   useEffect(() => {
     navigation.setOptions({
       title: data?.me.profile?.username,
@@ -27,11 +39,10 @@ export default function Me({ navigation }: Props) {
   }, []);
 
   return (
-    <Container>
-      <Text style={{ color: "white" }}>
-        Hello This is {data?.me.profile?.username}!
-      </Text>
-      <Button disabled={false} onPress={logUserOut} text="Logout" />
-    </Container>
+    <Profile
+      navigation={profileNavigation}
+      route={profileRoute}
+      myProfile={true}
+    />
   );
 }

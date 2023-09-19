@@ -97,6 +97,7 @@ export default function Login({ route: { params } }: Props) {
         onChangeText={(text: string) => setValue("password", text)}
       />
       <Button
+        $accent
         loading={loading}
         text="Log in"
         disabled={!watch("username") || !watch("password")}

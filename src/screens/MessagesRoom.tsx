@@ -339,7 +339,7 @@ export default function MessagesRoom({ route, navigation }: Props) {
   // }, []);
 
   // each message rendered in flatlist
-  const renderItem: ListRenderItem<Message> = ({ item, index }) => {
+  const renderItem: ListRenderItem<Message> = ({ item }) => {
     return <MessageItem message={item} />;
   };
 

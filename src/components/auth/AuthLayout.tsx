@@ -37,7 +37,7 @@ export default function AuthLayout({ children }: IProps) {
             width: "100%",
           }}
           behavior="position"
-          keyboardVerticalOffset={Platform.OS === "ios" ? 50 : -100}
+          keyboardVerticalOffset={Platform.OS === "ios" ? 50 : 100}
         >
           <Logo
             resizeMode="contain"
