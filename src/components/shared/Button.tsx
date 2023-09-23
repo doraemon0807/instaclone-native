@@ -49,7 +49,7 @@ export default function Button({
       {loading ? (
         <ActivityIndicator color="white" />
       ) : (
-        <SButtonText>{text}</SButtonText>
+        <SButtonText $accent={$accent}>{text}</SButtonText>
       )}
     </SButton>
   );

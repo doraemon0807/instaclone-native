@@ -1,4 +1,4 @@
-import { ImageProps } from "react-native";
+import React from "react";
 import styled from "styled-components/native";
 import { IThemeProps, darkTheme, lightTheme } from "../../../styles";
 import { useReactiveVar } from "@apollo/client";

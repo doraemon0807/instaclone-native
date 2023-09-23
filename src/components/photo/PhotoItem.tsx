@@ -200,6 +200,7 @@ export default function PhotoItem({
         <Avatar avatarUrl={user.avatar} size="small" />
         <Username>{user.username}</Username>
       </Header>
+
       <File
         resizeMode="contain"
         source={{ uri: file }}

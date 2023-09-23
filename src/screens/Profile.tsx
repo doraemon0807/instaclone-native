@@ -13,7 +13,7 @@ import {
 } from "@apollo/client";
 import useUser from "../hook/useUser";
 import { graphql } from "../gql";
-import { UnfollowUserMutation, User } from "../gql/graphql";
+import { FollowUserMutation, UnfollowUserMutation, User } from "../gql/graphql";
 import Avatar from "../components/shared/Avatar";
 import Separator from "../components/shared/Separator";
 import Button, { SButton } from "../components/shared/Button";
@@ -27,8 +27,8 @@ interface IPropsWithMe extends Props {
 
 export type IPostModeParams = "posts" | "saved" | "tagged";
 
-interface IUnfollowUserUpdateProps {
-  data?: UnfollowUserMutation | null;
+interface IFollowUserUpdateProps {
+  data?: FollowUserMutation | null;
 }
 
 const Container = styled.View`
@@ -160,8 +160,8 @@ const SEE_PROFILE_QUERY = graphql(`
 `);
 
 const FOLLOW_USER_MUTATION = graphql(`
-  mutation unfollowUser($username: String!) {
-    unfollowUser(username: $username) {
+  mutation followUser($username: String!) {
+    followUser(username: $username) {
       ok
       error
     }
@@ -169,8 +169,8 @@ const FOLLOW_USER_MUTATION = graphql(`
 `);
 
 const UNFOLLOW_USER_MUTATION = graphql(`
-  mutation followUser($username: String!) {
-    followUser(username: $username) {
+  mutation unfollowUser($username: String!) {
+    unfollowUser(username: $username) {
       ok
       error
     }
@@ -193,9 +193,7 @@ export default function Profile({
   //grab userData of logged in user
   const { data: userData } = useUser();
 
-  const username = myProfile
-    ? userData?.me.profile?.username
-    : route?.params?.username;
+  const username = route?.params?.username;
 
   //Apollo client allows you to access cache
   const client = useApolloClient();
@@ -211,14 +209,14 @@ export default function Profile({
   //method 1: update
   const followUserUpdate = (
     cache: ApolloCache<User>,
-    result: IUnfollowUserUpdateProps
+    result: IFollowUserUpdateProps
   ) => {
     if (!result.data) {
       return;
     }
     const {
       data: {
-        unfollowUser: { ok },
+        followUser: { ok },
       },
     } = result;
     if (!ok) {
@@ -267,13 +265,13 @@ export default function Profile({
 
   //function to update unfollowUser cache
   //method 2: onCompleted + Apollo client
-  const unfollowUserCompleted = (data: any) => {
-    const {
-      followUser: { ok },
-    } = data;
+  const unfollowUserCompleted = ({
+    unfollowUser: { ok },
+  }: UnfollowUserMutation) => {
     if (!ok) {
       return;
     }
+
     const { cache } = client;
 
     cache.modify({
@@ -314,7 +312,7 @@ export default function Profile({
     onCompleted: unfollowUserCompleted,
   });
 
-  const onFollowClick = () => {
+  const onFollowedClick = () => {
     unfollowUser();
   };
 
@@ -350,7 +348,7 @@ export default function Profile({
                 <ProfileActions>
                   {data?.seeProfile.profile?.isFollowing ? (
                     <ProfileAction>
-                      <Button text="Followed" onPress={onFollowClick} />
+                      <Button text="Followed" onPress={onFollowedClick} />
                     </ProfileAction>
                   ) : (
                     <ProfileAction>

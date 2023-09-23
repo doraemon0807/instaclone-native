@@ -28,7 +28,6 @@ Instagram Clone - Mobile Apps
 
 To Do:
 
-[ ] Profile page - Follow/Unfollow
 [ ] Profile page - Edit Profile
 [ ] Profile page - Post/Tagged/Saved
 [ ] Create Chat
