@@ -3,11 +3,15 @@ import { useEffect } from "react";
 import { graphql } from "../gql";
 import { isLoggedInVar, logUserOut } from "../../apollo";
 
-const ME_QUERY = graphql(`
+export const ME_QUERY = graphql(`
   query me {
     me {
       profile {
         ...UserFragment
+        firstName
+        lastName
+        email
+        bio
       }
     }
   }

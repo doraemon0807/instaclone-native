@@ -8,6 +8,7 @@ const STextInput = styled.TextInput.attrs((props: IThemeProps) => ({
   background-color: ${(props: IThemeProps) => props.theme.grayLight};
   padding: 10px 8px;
   border-radius: 4px;
+  width: 100%;
   color: ${(props: IThemeProps) => props.theme.fontColor};
   margin-bottom: ${(props: { lastOne?: boolean }) =>
     props.lastOne ? "15" : "8"}px;

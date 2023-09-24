@@ -22,7 +22,7 @@ import PhotoGallery from "../components/profile/PhotoGallery";
 type Props = NativeStackScreenProps<StackParamList, "Profile">;
 
 interface IPropsWithMe extends Props {
-  myProfile?: boolean;
+  isMe?: boolean;
 }
 
 export type IPostModeParams = "posts" | "saved" | "tagged";
@@ -177,11 +177,7 @@ const UNFOLLOW_USER_MUTATION = graphql(`
   }
 `);
 
-export default function Profile({
-  navigation,
-  route,
-  myProfile,
-}: IPropsWithMe) {
+export default function Profile({ navigation, route, isMe }: IPropsWithMe) {
   useEffect(() => {
     if (route?.params?.username) {
       navigation.setOptions({
@@ -193,7 +189,9 @@ export default function Profile({
   //grab userData of logged in user
   const { data: userData } = useUser();
 
-  const username = route?.params?.username;
+  const username = isMe
+    ? userData?.me.profile?.username
+    : route?.params?.username;
 
   //Apollo client allows you to access cache
   const client = useApolloClient();
@@ -320,6 +318,19 @@ export default function Profile({
     followUser();
   };
 
+  //function to edit profile
+  const handleEditProfile = () => {
+    if (userData && userData.me.profile) {
+      navigation.navigate("EditProfile", {
+        firstName: userData.me.profile.firstName!,
+        lastName: userData.me.profile.lastName!,
+        username: userData.me.profile.username!,
+        email: userData.me.profile.email!,
+        bio: userData.me.profile.bio || "",
+      });
+    }
+  };
+
   //states to change modes for photo gallery
   const [postMode, setPostMode] = useState<IPostModeParams>("posts");
 
@@ -338,7 +349,7 @@ export default function Profile({
               {data?.seeProfile.profile?.isMe ? (
                 <ProfileActions>
                   <ProfileAction>
-                    <Button text="Edit Profile" />
+                    <Button onPress={handleEditProfile} text="Edit Profile" />
                   </ProfileAction>
                   <ProfileAction>
                     <Button text="Log Out" onPress={() => logUserOut()} />

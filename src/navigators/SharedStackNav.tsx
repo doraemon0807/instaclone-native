@@ -14,6 +14,7 @@ import { darkModeVar } from "../../apollo";
 import { useReactiveVar } from "@apollo/client";
 import { darkTheme, lightTheme } from "../../styles";
 import styled from "styled-components/native";
+import EditProfile from "../screens/EditProfile";
 
 export type StackParamList = {
   Feed: undefined;
@@ -24,6 +25,7 @@ export type StackParamList = {
   Photo: IPhotoProps | undefined;
   Likes: IPhotoProps | undefined;
   Comments: undefined;
+  EditProfile: IEditProfileProps | undefined;
 };
 
 interface ISharedStackNavProps {
@@ -32,11 +34,18 @@ interface ISharedStackNavProps {
 
 interface IProfileProps {
   username: string;
-  id: number;
 }
 
 interface IPhotoProps {
   photoId: number;
+}
+
+interface IEditProfileProps {
+  username: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  bio: string;
 }
 
 const Logo = styled.Image`
@@ -92,6 +101,13 @@ export default function SharedStackNav({ screenName }: ISharedStackNavProps) {
       <Stack.Screen name="Photo" component={Photo} />
       <Stack.Screen name="Likes" component={Likes} />
       <Stack.Screen name="Comments" component={Comments} />
+      <Stack.Screen
+        name="EditProfile"
+        component={EditProfile}
+        options={{
+          title: "Edit Profile",
+        }}
+      />
     </Stack.Navigator>
   );
 }

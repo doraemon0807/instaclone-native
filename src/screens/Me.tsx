@@ -39,10 +39,6 @@ export default function Me({ navigation }: Props) {
   }, []);
 
   return (
-    <Profile
-      navigation={profileNavigation}
-      route={profileRoute}
-      myProfile={true}
-    />
+    <Profile navigation={profileNavigation} route={profileRoute} isMe={true} />
   );
 }

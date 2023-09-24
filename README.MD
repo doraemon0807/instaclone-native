@@ -29,7 +29,8 @@ Instagram Clone - Mobile Apps
 To Do:
 
 [ ] Profile page - Edit Profile
+[ ] Profile page - Validation based on the mode / create two forms?
 [ ] Profile page - Post/Tagged/Saved
-[ ] Create Chat
+[ ] Create Direct Message Chatroom
 [ ] Add comments to photos
 [ ] Mark messages as read when seen

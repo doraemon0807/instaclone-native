@@ -19,8 +19,9 @@ const documents = {
     "\n  fragment UserFragment on User {\n    id\n    username\n    avatar\n    isFollowing\n    isMe\n  }\n": types.UserFragmentFragmentDoc,
     "\n  fragment RoomFragment on Room {\n    id\n    updatedAt\n    unreadTotal\n    users {\n      id\n      avatar\n      username\n    }\n  }\n": types.RoomFragmentFragmentDoc,
     "\n  fragment MessageFragment on Message {\n    id\n    payload\n    readByMe\n    readByAll\n    isMine\n    user {\n      id\n      username\n      avatar\n    }\n    unreaders {\n      id\n      username\n    }\n  }\n": types.MessageFragmentFragmentDoc,
-    "\n  query me {\n    me {\n      profile {\n        ...UserFragment\n      }\n    }\n  }\n": types.MeDocument,
+    "\n  query me {\n    me {\n      profile {\n        ...UserFragment\n        firstName\n        lastName\n        email\n        bio\n      }\n    }\n  }\n": types.MeDocument,
     "\n  mutation createAccount(\n    $firstName: String!\n    $lastName: String!\n    $username: String!\n    $email: String!\n    $password: String!\n  ) {\n    createAccount(\n      firstName: $firstName\n      lastName: $lastName\n      username: $username\n      email: $email\n      password: $password\n    ) {\n      ok\n      error\n    }\n  }\n": types.CreateAccountDocument,
+    "\n  mutation editProfile(\n    $firstName: String\n    $lastName: String\n    $username: String\n    $email: String\n    $bio: String\n  ) {\n    editProfile(\n      firstName: $firstName\n      lastName: $lastName\n      username: $username\n      email: $email\n      bio: $bio\n    ) {\n      ok\n    }\n  }\n": types.EditProfileDocument,
     "\n  query seeFeed($offset: Int) {\n    seeFeed(offset: $offset) {\n      ...PhotoFragment\n      user {\n        ...UserFragment\n      }\n      comments {\n        ...CommentFragment\n      }\n    }\n  }\n": types.SeeFeedDocument,
     "\n  query seePhotoLikes($photoId: Int!) {\n    seePhotoLikes(id: $photoId) {\n      ...UserFragment\n    }\n  }\n": types.SeePhotoLikesDocument,
     "\n  mutation login($username: String!, $password: String!) {\n    login(username: $username, password: $password) {\n      ok\n      token\n      error\n    }\n  }\n": types.LoginDocument,
@@ -79,11 +80,15 @@ export function graphql(source: "\n  fragment MessageFragment on Message {\n    
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query me {\n    me {\n      profile {\n        ...UserFragment\n      }\n    }\n  }\n"): (typeof documents)["\n  query me {\n    me {\n      profile {\n        ...UserFragment\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  query me {\n    me {\n      profile {\n        ...UserFragment\n        firstName\n        lastName\n        email\n        bio\n      }\n    }\n  }\n"): (typeof documents)["\n  query me {\n    me {\n      profile {\n        ...UserFragment\n        firstName\n        lastName\n        email\n        bio\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation createAccount(\n    $firstName: String!\n    $lastName: String!\n    $username: String!\n    $email: String!\n    $password: String!\n  ) {\n    createAccount(\n      firstName: $firstName\n      lastName: $lastName\n      username: $username\n      email: $email\n      password: $password\n    ) {\n      ok\n      error\n    }\n  }\n"): (typeof documents)["\n  mutation createAccount(\n    $firstName: String!\n    $lastName: String!\n    $username: String!\n    $email: String!\n    $password: String!\n  ) {\n    createAccount(\n      firstName: $firstName\n      lastName: $lastName\n      username: $username\n      email: $email\n      password: $password\n    ) {\n      ok\n      error\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation editProfile(\n    $firstName: String\n    $lastName: String\n    $username: String\n    $email: String\n    $bio: String\n  ) {\n    editProfile(\n      firstName: $firstName\n      lastName: $lastName\n      username: $username\n      email: $email\n      bio: $bio\n    ) {\n      ok\n    }\n  }\n"): (typeof documents)["\n  mutation editProfile(\n    $firstName: String\n    $lastName: String\n    $username: String\n    $email: String\n    $bio: String\n  ) {\n    editProfile(\n      firstName: $firstName\n      lastName: $lastName\n      username: $username\n      email: $email\n      bio: $bio\n    ) {\n      ok\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

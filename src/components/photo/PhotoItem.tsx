@@ -190,7 +190,6 @@ export default function PhotoItem({
   const goToProfile = () => {
     navigation.navigate("Profile", {
       username: user.username,
-      id,
     });
   };
 
