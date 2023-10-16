@@ -28,7 +28,7 @@ Instagram Clone - Mobile Apps
 
 To Do:
 
+[ ] Mark messages as read when seen
 [ ] Profile page - Post/Tagged/Saved
 [ ] Create Direct Message Chatroom
 [ ] Add comments to photos
-[ ] Mark messages as read when seen

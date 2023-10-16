@@ -9,7 +9,7 @@ import RoomItem from "../components/messages/RoomItem";
 import Separator from "../components/shared/Separator";
 import { Room, User } from "../gql/graphql";
 
-const SEE_ROOMS_QUERY = graphql(`
+export const SEE_ROOMS_QUERY = graphql(`
   query seeRooms {
     seeRooms {
       ...RoomFragment

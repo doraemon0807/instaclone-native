@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   FlatList,
   KeyboardAvoidingView,
@@ -33,6 +33,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import useUser from "../hook/useUser";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { darkModeVar } from "../../apollo";
+import { SEE_ROOMS_QUERY } from "./MessagesRooms";
 
 type Props = NativeStackScreenProps<MessagesNavStackParamList, "MessageRoom">;
 
@@ -198,7 +199,7 @@ export default function MessagesRoom({ route, navigation }: Props) {
   );
 
   //--- QUERY && SUBSCRIPTION ---//
-  const { data, loading, subscribeToMore } = useQuery(ROOM_QUERY, {
+  const { data, loading, subscribeToMore, refetch } = useQuery(ROOM_QUERY, {
     variables: {
       id: route.params?.id!,
     },
@@ -211,9 +212,6 @@ export default function MessagesRoom({ route, navigation }: Props) {
     prev: SeeRoomQuery,
     { subscriptionData }: ISubscriptionProps
   ) => {
-    // console.log(prev);
-    // console.log("+++++++++++++++++");
-    // console.log(subscriptionData);
     const {
       data: { roomUpdate: message },
     } = subscriptionData;
@@ -279,6 +277,10 @@ export default function MessagesRoom({ route, navigation }: Props) {
     register("message", { required: true });
   }, [register]);
 
+  useEffect(() => {
+    refetch();
+  }, []);
+
   const opponentsIdArray = () => {
     let ids: number[] = [];
     route.params?.opponents?.map((opponent) => {
@@ -316,13 +318,13 @@ export default function MessagesRoom({ route, navigation }: Props) {
 
   //---mutation---//
 
-  //mutation function for readMessage
-  // const [readMessageMutation, { loading: readingMessage }] = useMutation(
-  //   READ_MESSAGE,
-  //   {
-  //     refetchQueries: [{ query: SEE_ROOMS_QUERY }],
-  //   }
-  // );
+  // mutation function for readMessage
+  const [readMessageMutation, { loading: readingMessage }] = useMutation(
+    READ_MESSAGE,
+    {
+      refetchQueries: [{ query: SEE_ROOMS_QUERY }],
+    }
+  );
 
   // useEffect(() => {
   //   if (data?.seeRoom?.messages) {
@@ -343,6 +345,26 @@ export default function MessagesRoom({ route, navigation }: Props) {
     return <MessageItem message={item} />;
   };
 
+  const onViewableItemsChanged = ({ viewableItems, changed }: any) => {
+    console.log(viewableItems[1].item);
+
+    if (viewableItems.length !== 0) {
+      viewableItems.map((item: any) => {
+        readMessageMutation({
+          variables: {
+            id: item.item.id,
+          },
+        });
+      });
+    }
+  };
+
+  const viewabilityConfig = { itemVisiblePercentThreshold: 100 };
+
+  const viewabilityConfigCallbackPairs = useRef([
+    { viewabilityConfig, onViewableItemsChanged },
+  ]);
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -357,6 +379,10 @@ export default function MessagesRoom({ route, navigation }: Props) {
           keyExtractor={(message) => message?.id + ""}
           renderItem={renderItem}
           data={data?.seeRoom?.messages as Message[]}
+          viewabilityConfig={viewabilityConfig}
+          viewabilityConfigCallbackPairs={
+            viewabilityConfigCallbackPairs.current
+          }
           ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
         />
         <InputContainer>
