@@ -49,7 +49,7 @@ const authLink = setContext((_, { headers }) => {
 
 //http link to upload files
 const uploadHttpLink = createUploadLink({
-  uri: "https://khaki-chefs-behave.loca.lt/graphql",
+  uri: "https://short-buckets-sip.loca.lt/graphql",
 });
 
 //http link to display errors
@@ -67,7 +67,7 @@ const httpLinks = authLink.concat(onErrorLink).concat(uploadHttpLink);
 
 //ws link for subscription
 const wsLink = new WebSocketLink({
-  uri: "ws://khaki-chefs-behave.loca.lt/graphql",
+  uri: "ws://short-buckets-sip.loca.lt/graphql",
   options: {
     reconnect: true,
     connectionParams: () => ({
@@ -77,7 +77,7 @@ const wsLink = new WebSocketLink({
 });
 
 // const wsLink = new WebSocketLink(
-//   new SubscriptionClient("ws://khaki-chefs-behave.loca.lt/graphql", {
+//   new SubscriptionClient("ws://short-buckets-sip.loca.lt/graphql", {
 //     connectionParams: () => ({
 //       token: tokenVar(),
 //     }),
@@ -86,7 +86,7 @@ const wsLink = new WebSocketLink({
 
 // const wsLink = new GraphQLWsLink(
 //   createClient({
-//     url: "ws://khaki-chefs-behave.loca.lt/graphql",
+//     url: "ws://short-buckets-sip.loca.lt/graphql",
 //     connectionParams: () => ({
 //       token: tokenVar(),
 //     }),

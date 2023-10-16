@@ -18,6 +18,7 @@ import Avatar from "../components/shared/Avatar";
 import Separator from "../components/shared/Separator";
 import Button, { SButton } from "../components/shared/Button";
 import PhotoGallery from "../components/profile/PhotoGallery";
+import ScreenLayout from "../components/shared/ScreenLayout";
 
 type Props = NativeStackScreenProps<StackParamList, "Profile">;
 
@@ -119,8 +120,9 @@ const PhotoMode = styled.TouchableOpacity<{ $active: boolean }>`
   justify-content: center;
   flex: 1;
   padding: 16px 0px;
-  border-top: 1px solid
-    ${(props: any) => (props.$active ? props.theme.fontColor : "transparent")};
+  border-top-width: 1px;
+  border-color: ${(props: any) =>
+    props.$active ? props.theme.fontColor : "transparent"};
 `;
 
 const PhotoModeText = styled.Text`
@@ -335,147 +337,153 @@ export default function Profile({ navigation, route, isMe }: IPropsWithMe) {
   const [postMode, setPostMode] = useState<IPostModeParams>("posts");
 
   return (
-    <Container>
-      <ProfileContainer>
-        <ProfileAvatar>
-          <Avatar avatarUrl={data?.seeProfile.profile?.avatar} size="large" />
-        </ProfileAvatar>
-        <ProfileBody>
-          <ProfileInfo>
-            <ProfileInfoHeader>
-              <ProfileUsername>
-                {data?.seeProfile.profile?.username}
-              </ProfileUsername>
-              {data?.seeProfile.profile?.isMe ? (
-                <ProfileActions>
-                  <ProfileAction>
-                    <Button onPress={handleEditProfile} text="Edit Profile" />
-                  </ProfileAction>
-                  <ProfileAction>
-                    <Button text="Log Out" onPress={() => logUserOut()} />
-                  </ProfileAction>
-                </ProfileActions>
-              ) : (
-                <ProfileActions>
-                  {data?.seeProfile.profile?.isFollowing ? (
+    <ScreenLayout loading={loading}>
+      <Container>
+        <ProfileContainer>
+          <ProfileAvatar>
+            <Avatar avatarUrl={data?.seeProfile.profile?.avatar} size="large" />
+          </ProfileAvatar>
+          <ProfileBody>
+            <ProfileInfo>
+              <ProfileInfoHeader>
+                <ProfileUsername>
+                  {data?.seeProfile.profile?.username}
+                </ProfileUsername>
+                {data?.seeProfile.profile?.isMe ? (
+                  <ProfileActions>
                     <ProfileAction>
-                      <Button text="Followed" onPress={onFollowedClick} />
+                      <Button onPress={handleEditProfile} text="Edit Profile" />
                     </ProfileAction>
-                  ) : (
                     <ProfileAction>
-                      <Button text="Follow" $accent onPress={onUnfollowClick} />
+                      <Button text="Log Out" onPress={() => logUserOut()} />
                     </ProfileAction>
-                  )}
-                  <ProfileAction>
-                    <Button text="Message" />
-                  </ProfileAction>
-                </ProfileActions>
-              )}
-            </ProfileInfoHeader>
-          </ProfileInfo>
-          <ProfileDetail>
-            <ProfileName>{data?.seeProfile.profile?.fullName}</ProfileName>
-            <ProfileBio>{data?.seeProfile.profile?.bio}</ProfileBio>
-          </ProfileDetail>
-        </ProfileBody>
-      </ProfileContainer>
-      <Separator />
-      <ProfileStats>
-        <ProfileStat>
-          {data?.seeProfile.profile?.photoCount === 1 ? (
-            <>
-              <ProfileStatNumber>1</ProfileStatNumber>
-              <ProfileStatText>post</ProfileStatText>
-            </>
-          ) : (
-            <>
-              <ProfileStatNumber>
-                {data?.seeProfile.profile?.photoCount}
-              </ProfileStatNumber>
-              <ProfileStatText>post</ProfileStatText>
-            </>
-          )}
-        </ProfileStat>
-        <ProfileStat>
-          {data?.seeProfile.profile?.totalFollowers === 1 ? (
-            <>
-              <ProfileStatNumber>1</ProfileStatNumber>
-              <ProfileStatText>follower</ProfileStatText>
-            </>
-          ) : (
-            <>
-              <ProfileStatNumber>
-                {data?.seeProfile.profile?.totalFollowers}
-              </ProfileStatNumber>
-              <ProfileStatText>followers</ProfileStatText>
-            </>
-          )}
-        </ProfileStat>
-        <ProfileStat>
-          {data?.seeProfile.profile?.totalFollowing === 1 ? (
-            <>
-              <ProfileStatNumber>1</ProfileStatNumber>
-              <ProfileStatText>following</ProfileStatText>
-            </>
-          ) : (
-            <>
-              <ProfileStatNumber>
-                {data?.seeProfile.profile?.totalFollowing}
-              </ProfileStatNumber>
-              <ProfileStatText>followings</ProfileStatText>
-            </>
-          )}
-        </ProfileStat>
-      </ProfileStats>
-      <Separator />
-      <PhotoContainer>
-        <PhotoHeader>
-          <PhotoMode
-            $active={postMode === "posts"}
-            onPress={() => setPostMode("posts")}
-          >
-            <PhotoModeText>Posts</PhotoModeText>
-          </PhotoMode>
-          {data?.seeProfile.profile?.isMe && (
+                  </ProfileActions>
+                ) : (
+                  <ProfileActions>
+                    {data?.seeProfile.profile?.isFollowing ? (
+                      <ProfileAction>
+                        <Button text="Followed" onPress={onFollowedClick} />
+                      </ProfileAction>
+                    ) : (
+                      <ProfileAction>
+                        <Button
+                          text="Follow"
+                          $accent
+                          onPress={onUnfollowClick}
+                        />
+                      </ProfileAction>
+                    )}
+                    <ProfileAction>
+                      <Button text="Message" />
+                    </ProfileAction>
+                  </ProfileActions>
+                )}
+              </ProfileInfoHeader>
+            </ProfileInfo>
+            <ProfileDetail>
+              <ProfileName>{`${data?.seeProfile.profile?.firstName} ${data?.seeProfile.profile?.lastName}`}</ProfileName>
+              <ProfileBio>{data?.seeProfile.profile?.bio}</ProfileBio>
+            </ProfileDetail>
+          </ProfileBody>
+        </ProfileContainer>
+        <Separator />
+        <ProfileStats>
+          <ProfileStat>
+            {data?.seeProfile.profile?.photoCount === 1 ? (
+              <>
+                <ProfileStatNumber>1</ProfileStatNumber>
+                <ProfileStatText>post</ProfileStatText>
+              </>
+            ) : (
+              <>
+                <ProfileStatNumber>
+                  {data?.seeProfile.profile?.photoCount}
+                </ProfileStatNumber>
+                <ProfileStatText>post</ProfileStatText>
+              </>
+            )}
+          </ProfileStat>
+          <ProfileStat>
+            {data?.seeProfile.profile?.totalFollowers === 1 ? (
+              <>
+                <ProfileStatNumber>1</ProfileStatNumber>
+                <ProfileStatText>follower</ProfileStatText>
+              </>
+            ) : (
+              <>
+                <ProfileStatNumber>
+                  {data?.seeProfile.profile?.totalFollowers}
+                </ProfileStatNumber>
+                <ProfileStatText>followers</ProfileStatText>
+              </>
+            )}
+          </ProfileStat>
+          <ProfileStat>
+            {data?.seeProfile.profile?.totalFollowing === 1 ? (
+              <>
+                <ProfileStatNumber>1</ProfileStatNumber>
+                <ProfileStatText>following</ProfileStatText>
+              </>
+            ) : (
+              <>
+                <ProfileStatNumber>
+                  {data?.seeProfile.profile?.totalFollowing}
+                </ProfileStatNumber>
+                <ProfileStatText>followings</ProfileStatText>
+              </>
+            )}
+          </ProfileStat>
+        </ProfileStats>
+        <Separator />
+        <PhotoContainer>
+          <PhotoHeader>
             <PhotoMode
-              $active={postMode === "saved"}
-              onPress={() => setPostMode("saved")}
+              $active={postMode === "posts"}
+              onPress={() => setPostMode("posts")}
             >
-              <PhotoModeText>Saved</PhotoModeText>
+              <PhotoModeText>Posts</PhotoModeText>
             </PhotoMode>
-          )}
-          <PhotoMode
-            $active={postMode === "tagged"}
-            onPress={() => setPostMode("tagged")}
-          >
-            <PhotoModeText>Tagged</PhotoModeText>
-          </PhotoMode>
-        </PhotoHeader>
-        <PhotoWrapper>
-          {postMode === "posts" && data?.seeProfile.profile?.photos && (
-            <PhotoGallery
-              mode={postMode}
-              isMe={data?.seeProfile.profile?.isMe}
-              photos={data.seeProfile.profile.photos}
-            />
-          )}
-          {postMode === "saved" && data?.seeProfile.profile?.savedPhotos && (
-            <PhotoGallery
-              mode={postMode}
-              isMe={data?.seeProfile.profile?.isMe}
-              photos={data.seeProfile.profile.savedPhotos}
-            />
-          )}
-          {postMode === "tagged" && data?.seeProfile.profile?.taggedPhotos && (
-            <PhotoGallery
-              mode={postMode}
-              isMe={data?.seeProfile.profile?.isMe}
-              photos={data.seeProfile.profile.taggedPhotos}
-            />
-          )}
-        </PhotoWrapper>
-      </PhotoContainer>
-      {/* 
+            {data?.seeProfile.profile?.isMe && (
+              <PhotoMode
+                $active={postMode === "saved"}
+                onPress={() => setPostMode("saved")}
+              >
+                <PhotoModeText>Saved</PhotoModeText>
+              </PhotoMode>
+            )}
+            <PhotoMode
+              $active={postMode === "tagged"}
+              onPress={() => setPostMode("tagged")}
+            >
+              <PhotoModeText>Tagged</PhotoModeText>
+            </PhotoMode>
+          </PhotoHeader>
+          <PhotoWrapper>
+            {postMode === "posts" && data?.seeProfile.profile?.photos && (
+              <PhotoGallery
+                mode={postMode}
+                isMe={data?.seeProfile.profile?.isMe}
+                photos={data.seeProfile.profile.photos}
+              />
+            )}
+            {postMode === "saved" && data?.seeProfile.profile?.savedPhotos && (
+              <PhotoGallery
+                mode={postMode}
+                isMe={data?.seeProfile.profile?.isMe}
+                photos={data.seeProfile.profile.savedPhotos}
+              />
+            )}
+            {postMode === "tagged" &&
+              data?.seeProfile.profile?.taggedPhotos && (
+                <PhotoGallery
+                  mode={postMode}
+                  isMe={data?.seeProfile.profile?.isMe}
+                  photos={data.seeProfile.profile.taggedPhotos}
+                />
+              )}
+          </PhotoWrapper>
+        </PhotoContainer>
+        {/* 
       
       <PhotoContainer>
         <PhotoHeader>
@@ -524,6 +532,7 @@ export default function Profile({ navigation, route, isMe }: IPropsWithMe) {
           )}
         </PhotoWrapper>
       </PhotoContainer> */}
-    </Container>
+      </Container>
+    </ScreenLayout>
   );
 }
