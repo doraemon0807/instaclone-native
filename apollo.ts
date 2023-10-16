@@ -1,5 +1,6 @@
 import {
   ApolloClient,
+  HttpLink,
   InMemoryCache,
   createHttpLink,
   makeVar,
@@ -49,7 +50,7 @@ const authLink = setContext((_, { headers }) => {
 
 //http link to upload files
 const uploadHttpLink = createUploadLink({
-  uri: "https://short-buckets-sip.loca.lt/graphql",
+  uri: "https://empty-points-play.loca.lt/graphql",
 });
 
 //http link to display errors
@@ -66,32 +67,32 @@ const onErrorLink = onError(({ graphQLErrors, networkError }) => {
 const httpLinks = authLink.concat(onErrorLink).concat(uploadHttpLink);
 
 //ws link for subscription
-const wsLink = new WebSocketLink({
-  uri: "ws://short-buckets-sip.loca.lt/graphql",
-  options: {
-    reconnect: true,
+// const wsLink = new WebSocketLink({
+//   uri: "ws://empty-points-play.loca.lt/graphql",
+//   options: {
+//     reconnect: true,
+//     connectionParams: () => ({
+//       token: tokenVar(),
+//     }),
+//   },
+// });
+
+// const wsLink = new WebSocketLink(
+//   new SubscriptionClient("ws://empty-points-play.loca.lt/graphql", {
+//     connectionParams: () => ({
+//       token: tokenVar(),
+//     }),
+//   })
+// );
+
+const wsLink = new GraphQLWsLink(
+  createClient({
+    url: "ws://empty-points-play.loca.lt/graphql",
     connectionParams: () => ({
       token: tokenVar(),
     }),
-  },
-});
-
-// const wsLink = new WebSocketLink(
-//   new SubscriptionClient("ws://short-buckets-sip.loca.lt/graphql", {
-//     connectionParams: () => ({
-//       token: tokenVar(),
-//     }),
-//   })
-// );
-
-// const wsLink = new GraphQLWsLink(
-//   createClient({
-//     url: "ws://short-buckets-sip.loca.lt/graphql",
-//     connectionParams: () => ({
-//       token: tokenVar(),
-//     }),
-//   })
-// );
+  })
+);
 
 //split function to choose either ws or http depending on the operation
 const splitLink = split(

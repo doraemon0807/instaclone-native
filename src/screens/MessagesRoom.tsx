@@ -211,51 +211,51 @@ export default function MessagesRoom({ route, navigation }: Props) {
     prev: SeeRoomQuery,
     { subscriptionData }: ISubscriptionProps
   ) => {
-    console.log(prev);
-    console.log("+++++++++++++++++");
-    console.log(subscriptionData);
-    // const {
-    //   data: { roomUpdate: message },
-    // } = subscriptionData;
-    // //if message exists
-    // if (message?.id) {
-    //   //create fragment from message object
-    //   const messageFragment = client.cache.writeFragment({
-    //     fragment: gql`
-    //       fragment NewMessage on Message {
-    //         id
-    //         payload
-    //         readByMe
-    //         readByAll
-    //         isMine
-    //         user {
-    //           id
-    //           username
-    //           avatar
-    //         }
-    //       }
-    //     `,
-    //     data: message,
-    //   });
+    // console.log(prev);
+    // console.log("+++++++++++++++++");
+    // console.log(subscriptionData);
+    const {
+      data: { roomUpdate: message },
+    } = subscriptionData;
+    //if message exists
+    if (message?.id) {
+      //create fragment from message object
+      const messageFragment = client.cache.writeFragment({
+        fragment: gql`
+          fragment NewMessage on Message {
+            id
+            payload
+            readByMe
+            readByAll
+            isMine
+            user {
+              id
+              username
+              avatar
+            }
+          }
+        `,
+        data: message,
+      });
 
-    //   //put created fragment to the existing cache
-    //   client.cache.modify({
-    //     id: `Room:${route.params?.id}`,
-    //     fields: {
-    //       messages(prev) {
-    //         const existingMessage = prev.find(
-    //           //to fix duplicated message issue: check if the message already exists in prev
-    //           (aMessage: { __ref: string }) =>
-    //             aMessage.__ref === messageFragment?.__ref
-    //         );
-    //         if (existingMessage) {
-    //           return prev;
-    //         }
-    //         return [messageFragment, ...prev];
-    //       },
-    //     },
-    //   });
-    // }
+      //put created fragment to the existing cache
+      client.cache.modify({
+        id: `Room:${route.params?.id}`,
+        fields: {
+          messages(prev) {
+            const existingMessage = prev.find(
+              //to fix duplicated message issue: check if the message already exists in prev
+              (aMessage: { __ref: string }) =>
+                aMessage.__ref === messageFragment?.__ref
+            );
+            if (existingMessage) {
+              return prev;
+            }
+            return [messageFragment, ...prev];
+          },
+        },
+      });
+    }
   };
 
   const [subscribed, setSubscribed] = useState(false);
